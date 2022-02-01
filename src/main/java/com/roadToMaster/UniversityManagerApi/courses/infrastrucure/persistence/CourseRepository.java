@@ -4,6 +4,10 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.e
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface CourseRepository extends CrudRepository<CourseEntity, String> {
+
+  Optional<CourseEntity> findByName(String name);
 }

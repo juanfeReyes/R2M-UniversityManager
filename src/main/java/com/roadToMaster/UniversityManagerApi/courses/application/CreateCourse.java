@@ -3,11 +3,12 @@ package com.roadToMaster.UniversityManagerApi.courses.application;
 import com.roadToMaster.UniversityManagerApi.courses.domain.Course;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.CourseRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CourseEntity;
+import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceAlreadyCreatedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CreateCourse {
+public class CreateCourse implements ICreateCourse{
 
   private CourseRepository courseRepository;
 
@@ -16,13 +17,11 @@ public class CreateCourse {
     this.courseRepository = courseRepository;
   }
 
-  public Course execute(Course course){
-    //TODO: Validate by name
-    if(courseRepository.existsById(course.getId())){
-      // throw exception that course already exists
+  public Course execute(Course course) throws Exception {
+    if(courseRepository.findByName(course.getName()).isPresent()){
+      throw new ResourceAlreadyCreatedException("Course already exists exception");
     }
 
-    // save course
     courseRepository.save(CourseEntity.toEntity(course));
 
     return course;
