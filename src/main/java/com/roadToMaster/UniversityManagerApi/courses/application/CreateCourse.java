@@ -19,7 +19,7 @@ public class CreateCourse implements ICreateCourse{
 
   public Course execute(Course course){
     if(courseRepository.findByName(course.getName()).isPresent()){
-      throw new ResourceAlreadyCreatedException(String.format("Course with name %s already exists", course.getName()));
+      throw new ResourceAlreadyCreatedException(String.format("Course with name: %s already exists", course.getName()));
     }
 
     courseRepository.save(CourseEntity.toEntity(course));

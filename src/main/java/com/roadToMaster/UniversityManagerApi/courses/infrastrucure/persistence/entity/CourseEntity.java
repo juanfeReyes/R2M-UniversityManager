@@ -18,10 +18,10 @@ import java.util.Date;
 @Table(name = "course")
 public class CourseEntity {
 
-  @Id
+  @Column
   private String id;
 
-  @Column
+  @Id
   private String name;
 
   @Column
