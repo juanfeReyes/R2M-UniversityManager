@@ -56,6 +56,7 @@ class CreateCourseTest {
     assertThatThrownBy(() -> {
       createCourse.execute(course);
     }).isInstanceOf(ResourceAlreadyCreatedException.class)
-        .hasMessage(String.format("Course with name %s already exists", course.getName()));
+        .hasMessage(String.format("Course with name: %s already exists", course.getName()));
+    verify(courseRepositoryMock, never()).save(courseEntityCaptor.capture());
   }
 }

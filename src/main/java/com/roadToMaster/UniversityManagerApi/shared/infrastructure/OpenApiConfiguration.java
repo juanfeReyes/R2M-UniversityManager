@@ -6,6 +6,7 @@ import io.swagger.v3.oas.models.security.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 
+//TODO: Enable when security configuration is working
 //@Configuration
 public class OpenApiConfiguration {
 
