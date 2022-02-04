@@ -25,7 +25,7 @@ public class CreateCourseTest extends ComponentTestBase {
 
   @Autowired
   public CourseRepository courseRepository;
-  
+
   BiPredicate<Timestamp, Date> dateComparator = (expected, actual) -> expected.toInstant().compareTo(actual.toInstant()) == 0;
 
   @BeforeEach

@@ -19,10 +19,10 @@ import javax.validation.Valid;
 @Tag(name = "Course")
 public class CreateCourseController {
 
-  private ICreateCourse createCourse;
+  private final ICreateCourse createCourse;
 
   @Autowired
-  public CreateCourseController(ICreateCourse createCourse){
+  public CreateCourseController(ICreateCourse createCourse) {
     this.createCourse = createCourse;
   }
 

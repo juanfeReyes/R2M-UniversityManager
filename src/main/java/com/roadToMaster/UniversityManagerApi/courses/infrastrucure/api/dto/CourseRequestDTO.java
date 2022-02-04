@@ -20,7 +20,7 @@ public class CourseRequestDTO {
 
   private boolean active;
 
-  public static Course toDomain(CourseRequestDTO courseRequestDTO){
+  public static Course toDomain(CourseRequestDTO courseRequestDTO) {
     return new Course(
         courseRequestDTO.getId(),
         courseRequestDTO.getName(),

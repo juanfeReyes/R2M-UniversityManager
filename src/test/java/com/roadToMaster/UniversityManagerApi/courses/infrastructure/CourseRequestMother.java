@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class CourseRequestMother {
 
-  public static CourseRequestDTO buildValidRequest(){
+  public static CourseRequestDTO buildValidRequest() {
     var request = new CourseRequestDTO();
     request.setActive(true);
     request.setId(UUID.randomUUID().toString());
@@ -18,7 +18,7 @@ public class CourseRequestMother {
     return request;
   }
 
-  public static CourseRequestDTO buildInvalidRequestByName(){
+  public static CourseRequestDTO buildInvalidRequestByName() {
     var request = new CourseRequestDTO();
     request.setActive(true);
     request.setId(UUID.randomUUID().toString());

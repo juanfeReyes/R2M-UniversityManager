@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @NoArgsConstructor
@@ -19,12 +18,12 @@ public class ErrorResponse {
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private List<String> fieldsError;
 
-  public ErrorResponse(String message){
+  public ErrorResponse(String message) {
     this.message = message;
     this.timestamp = new Date();
   }
 
-  public ErrorResponse(String message, List<String> violations){
+  public ErrorResponse(String message, List<String> violations) {
     this.message = message;
     this.timestamp = new Date();
     this.fieldsError = violations;

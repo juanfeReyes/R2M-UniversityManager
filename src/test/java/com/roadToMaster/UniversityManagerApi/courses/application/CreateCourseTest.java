@@ -7,7 +7,6 @@ import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceAl
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -32,7 +31,7 @@ class CreateCourseTest {
   private ArgumentCaptor<CourseEntity> courseEntityCaptor;
 
   @BeforeEach
-  public void init(){
+  public void init() {
     Mockito.clearInvocations(courseRepositoryMock);
     this.createCourse = new CreateCourse(courseRepositoryMock);
   }
@@ -50,13 +49,13 @@ class CreateCourseTest {
   }
 
   @Test
-  public void ShouldThrowExceptionWhenCourseExists(){
+  public void ShouldThrowExceptionWhenCourseExists() {
     var course = CourseMother.validCourse();
     when(courseRepositoryMock.findByName(anyString())).thenReturn(Optional.of(CourseEntity.toEntity(course)));
 
     assertThatThrownBy(() -> {
       createCourse.execute(course);
     }).isInstanceOf(ResourceAlreadyCreatedException.class)
-            .hasMessage(String.format("Course with name %s already exists", course.getName()));
+        .hasMessage(String.format("Course with name %s already exists", course.getName()));
   }
 }

@@ -12,17 +12,17 @@ import javax.validation.Valid;
 
 @Service
 @Validated
-public class CreateCourse implements ICreateCourse{
+public class CreateCourse implements ICreateCourse {
 
-  private CourseRepository courseRepository;
+  private final CourseRepository courseRepository;
 
   @Autowired
-  public CreateCourse(CourseRepository courseRepository){
+  public CreateCourse(CourseRepository courseRepository) {
     this.courseRepository = courseRepository;
   }
 
-  public Course execute(@Valid Course course){
-    if(courseRepository.findByName(course.getName()).isPresent()){
+  public Course execute(@Valid Course course) {
+    if (courseRepository.findByName(course.getName()).isPresent()) {
       throw new ResourceAlreadyCreatedException(String.format("Course with name: %s already exists", course.getName()));
     }
 

@@ -34,7 +34,7 @@ public class CourseEntity {
   private boolean active;
 
 
-  public static CourseEntity toEntity(Course course){
+  public static CourseEntity toEntity(Course course) {
     return CourseEntity.builder()
         .id(course.getId())
         .name(course.getName())
