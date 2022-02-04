@@ -6,6 +6,7 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastructure.CourseReques
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CourseRequestDTO;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.CourseRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CourseEntity;
+import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.ErrorResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class CreateCourseTest extends ComponentTestBase {
 
   @Autowired
   public CourseRepository courseRepository;
+  
   BiPredicate<Timestamp, Date> dateComparator = (expected, actual) -> expected.toInstant().compareTo(actual.toInstant()) == 0;
 
   @BeforeEach
@@ -50,8 +52,19 @@ public class CreateCourseTest extends ComponentTestBase {
     var request = CourseRequestMother.buildValidRequest();
 
     courseRepository.save(CourseEntity.toEntity(CourseRequestDTO.toDomain(request)));
-    var response = restTemplate.postForEntity(COURSE_URL, request, Course.class);
+    var response = restTemplate.postForEntity(COURSE_URL, request, ErrorResponse.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+  }
+
+  @Test
+  public void shouldReturnBadRequestWhenNameIsEmpty() {
+    var request = CourseRequestMother.buildInvalidRequestByName();
+
+    var response = restTemplate.postForEntity(COURSE_URL, request, ErrorResponse.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    assertThat(response.getBody().getMessage()).isEqualTo("Bad request the following fields have errors");
+    assertThat(response.getBody().getFieldsError()).containsExactly("Name cannot be empty");
   }
 }

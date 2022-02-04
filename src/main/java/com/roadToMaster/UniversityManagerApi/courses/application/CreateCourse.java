@@ -6,8 +6,12 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.e
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceAlreadyCreatedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
 
 @Service
+@Validated
 public class CreateCourse implements ICreateCourse{
 
   private CourseRepository courseRepository;
@@ -17,7 +21,7 @@ public class CreateCourse implements ICreateCourse{
     this.courseRepository = courseRepository;
   }
 
-  public Course execute(Course course){
+  public Course execute(@Valid Course course){
     if(courseRepository.findByName(course.getName()).isPresent()){
       throw new ResourceAlreadyCreatedException(String.format("Course with name: %s already exists", course.getName()));
     }

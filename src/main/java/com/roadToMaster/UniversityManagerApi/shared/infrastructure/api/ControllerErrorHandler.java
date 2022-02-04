@@ -8,6 +8,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.ConstraintDeclarationException;
+import javax.validation.ConstraintViolationException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 @ControllerAdvice
 public class ControllerErrorHandler extends ResponseEntityExceptionHandler {
 
@@ -16,5 +21,16 @@ public class ControllerErrorHandler extends ResponseEntityExceptionHandler {
   public ResponseEntity<ErrorResponse> handleResourceAlreadyCreatedException(ResourceAlreadyCreatedException exception){
     var errorMessage = new ErrorResponse(exception.getMessage());
     return new ResponseEntity<ErrorResponse>(errorMessage, HttpStatus.CONFLICT);
+  }
+
+  @ResponseBody
+  @ExceptionHandler(value = {ConstraintViolationException.class})
+  public ResponseEntity<ErrorResponse> handleConstraintDeclarationException(ConstraintViolationException exception){
+    var errors = new ArrayList<String>();
+    for (var error : exception.getConstraintViolations()){
+      errors.add(error.getMessage());
+    }
+    var errorMessage = new ErrorResponse("Bad request the following fields have errors", errors);
+    return new ResponseEntity<ErrorResponse>(errorMessage, HttpStatus.BAD_REQUEST);
   }
 }

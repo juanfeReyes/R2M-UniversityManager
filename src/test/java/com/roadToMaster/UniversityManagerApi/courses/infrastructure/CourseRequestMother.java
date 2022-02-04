@@ -17,4 +17,15 @@ public class CourseRequestMother {
 
     return request;
   }
+
+  public static CourseRequestDTO buildInvalidRequestByName(){
+    var request = new CourseRequestDTO();
+    request.setActive(true);
+    request.setId(UUID.randomUUID().toString());
+    request.setName("");
+    request.setEndDate(new Date());
+    request.setStartDate(new Date());
+
+    return request;
+  }
 }

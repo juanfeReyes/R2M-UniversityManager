@@ -6,6 +6,7 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.Cours
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,9 +26,9 @@ public class CreateCourseController {
     this.createCourse = createCourse;
   }
 
+  @Validated
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public Course createCourse(@Valid @RequestBody CourseRequestDTO courseRequestDTO) throws Exception {
-    var course = createCourse.execute(CourseRequestDTO.toDomain(courseRequestDTO));
-    return course;
+    return createCourse.execute(CourseRequestDTO.toDomain(courseRequestDTO));
   }
 }
