@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class CourseRequestDTO {
+public class CourseRequest {
 
   private String id;
 
@@ -20,7 +20,7 @@ public class CourseRequestDTO {
 
   private boolean active;
 
-  public static Course toDomain(CourseRequestDTO courseRequestDTO) {
+  public static Course toDomain(CourseRequest courseRequestDTO) {
     return new Course(
         courseRequestDTO.getId(),
         courseRequestDTO.getName(),
