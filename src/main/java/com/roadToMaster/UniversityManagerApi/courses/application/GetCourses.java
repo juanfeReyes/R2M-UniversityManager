@@ -18,13 +18,11 @@ public class GetCourses implements IGetCourses{
     this.courseRepository = courseRepository;
   }
 
-  //TODO: should i build the pageable in the use case? what happend for invalid input??
   @Override
   public Page<Course> execute(Pageable pageable) {
 
     var courses = courseRepository.findAll(pageable);
 
-    //TODO: Cannot return page object must create pageable response
     return courses.map(CourseEntity::toDomain);
   }
 }
