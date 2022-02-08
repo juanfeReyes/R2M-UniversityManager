@@ -31,4 +31,6 @@ public class ControllerErrorHandler extends ResponseEntityExceptionHandler {
     var errorMessage = new ErrorResponse("Bad request the following fields have errors", errors);
     return new ResponseEntity<ErrorResponse>(errorMessage, HttpStatus.BAD_REQUEST);
   }
+
+
 }
