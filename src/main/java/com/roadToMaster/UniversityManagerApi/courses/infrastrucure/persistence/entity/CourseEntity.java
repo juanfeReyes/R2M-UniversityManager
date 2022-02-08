@@ -46,7 +46,7 @@ public class CourseEntity {
         .build();
   }
 
-  public static Course toDomain(CourseEntity courseEntity){
+  public static Course toDomain(CourseEntity courseEntity) {
     return new Course(
         courseEntity.getId(),
         courseEntity.getName(),

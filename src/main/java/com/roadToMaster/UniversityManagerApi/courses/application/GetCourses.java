@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GetCourses implements IGetCourses{
+public class GetCourses implements IGetCourses {
 
   private final CourseRepository courseRepository;
 

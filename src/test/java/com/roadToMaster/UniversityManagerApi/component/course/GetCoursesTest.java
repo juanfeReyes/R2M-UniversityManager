@@ -23,10 +23,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class GetCoursesTest extends ComponentTestBase {
 
-  private static final ParameterizedTypeReference<PageResponse<Course>> courseResponseReference = new ParameterizedTypeReference<PageResponse<Course>>(){};
-
   public static final String COURSE_URL = "/course";
-
+  private static final ParameterizedTypeReference<PageResponse<Course>> courseResponseReference = new ParameterizedTypeReference<PageResponse<Course>>() {
+  };
   @Autowired
   public CourseRepository courseRepository;
 
@@ -38,7 +37,7 @@ public class GetCoursesTest extends ComponentTestBase {
   }
 
   @Test
-  public void shouldGetCourses(){
+  public void shouldGetCourses() {
     var course = CourseMother.validCourse();
     courseRepository.save(CourseEntity.toEntity(course));
 
@@ -46,7 +45,7 @@ public class GetCoursesTest extends ComponentTestBase {
         .queryParam("pageNumber", 0)
         .queryParam("pageSize", 2)
         .toUriString();
-    var pageResponse = restTemplate.exchange(url, HttpMethod.GET,null, courseResponseReference);
+    var pageResponse = restTemplate.exchange(url, HttpMethod.GET, null, courseResponseReference);
 
     assertThat(pageResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(pageResponse.getBody().getContent()).first()
@@ -54,24 +53,24 @@ public class GetCoursesTest extends ComponentTestBase {
   }
 
   @Test
-  public void shouldReturnBadRequestWhenPageNumberIsNegative(){
+  public void shouldReturnBadRequestWhenPageNumberIsNegative() {
     var url = UriComponentsBuilder.fromUriString(COURSE_URL)
         .queryParam("pageNumber", -1)
         .queryParam("pageSize", 2)
         .toUriString();
-    var pageResponse = restTemplate.exchange(url, HttpMethod.GET,null, ErrorResponse.class);
+    var pageResponse = restTemplate.exchange(url, HttpMethod.GET, null, ErrorResponse.class);
 
     assertThat(pageResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     assertThat(pageResponse.getBody().getFieldsError()).containsExactly("page number must be more at least 0");
   }
 
   @Test
-  public void shouldReturnBadRequestWhenPageSizeIsZero(){
+  public void shouldReturnBadRequestWhenPageSizeIsZero() {
     var url = UriComponentsBuilder.fromUriString(COURSE_URL)
         .queryParam("pageNumber", 5)
         .queryParam("pageSize", 0)
         .toUriString();
-    var pageResponse = restTemplate.exchange(url, HttpMethod.GET,null, ErrorResponse.class);
+    var pageResponse = restTemplate.exchange(url, HttpMethod.GET, null, ErrorResponse.class);
 
     assertThat(pageResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     assertThat(pageResponse.getBody().getFieldsError()).containsExactly("page size must be more at least 1");
