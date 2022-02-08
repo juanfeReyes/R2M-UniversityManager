@@ -1,14 +1,14 @@
 package com.roadToMaster.UniversityManagerApi.courses.infrastructure;
 
-import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CourseRequestDTO;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CourseRequest;
 
 import java.util.Date;
 import java.util.UUID;
 
 public class CourseRequestMother {
 
-  public static CourseRequestDTO buildValidRequest() {
-    var request = new CourseRequestDTO();
+  public static CourseRequest buildValidRequest() {
+    var request = new CourseRequest();
     request.setActive(true);
     request.setId(UUID.randomUUID().toString());
     request.setName("Valid course");
@@ -18,8 +18,8 @@ public class CourseRequestMother {
     return request;
   }
 
-  public static CourseRequestDTO buildInvalidRequestByName() {
-    var request = new CourseRequestDTO();
+  public static CourseRequest buildInvalidRequestByName() {
+    var request = new CourseRequest();
     request.setActive(true);
     request.setId(UUID.randomUUID().toString());
     request.setName("");

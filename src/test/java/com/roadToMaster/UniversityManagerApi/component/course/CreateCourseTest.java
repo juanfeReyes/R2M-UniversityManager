@@ -3,7 +3,7 @@ package com.roadToMaster.UniversityManagerApi.component.course;
 import com.roadToMaster.UniversityManagerApi.component.ComponentTestBase;
 import com.roadToMaster.UniversityManagerApi.courses.domain.Course;
 import com.roadToMaster.UniversityManagerApi.courses.infrastructure.CourseRequestMother;
-import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CourseRequestDTO;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CourseRequest;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.CourseRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CourseEntity;
 import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.ErrorResponse;
@@ -51,7 +51,7 @@ public class CreateCourseTest extends ComponentTestBase {
   public void shouldReturnConflictWhenCourseExist() {
     var request = CourseRequestMother.buildValidRequest();
 
-    courseRepository.save(CourseEntity.toEntity(CourseRequestDTO.toDomain(request)));
+    courseRepository.save(CourseEntity.toEntity(CourseRequest.toDomain(request)));
     var response = restTemplate.postForEntity(COURSE_URL, request, ErrorResponse.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);

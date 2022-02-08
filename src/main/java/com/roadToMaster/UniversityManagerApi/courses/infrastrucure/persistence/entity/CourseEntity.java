@@ -3,6 +3,7 @@ package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.
 import com.roadToMaster.UniversityManagerApi.courses.domain.Course;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import java.util.Date;
 
 @Entity
 @Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "course")
@@ -42,5 +44,15 @@ public class CourseEntity {
         .endDate(course.getEndDate())
         .active(course.isActive())
         .build();
+  }
+
+  public static Course toDomain(CourseEntity courseEntity) {
+    return new Course(
+        courseEntity.getId(),
+        courseEntity.getName(),
+        courseEntity.getStartDate(),
+        courseEntity.getEndDate(),
+        courseEntity.isActive()
+    );
   }
 }
