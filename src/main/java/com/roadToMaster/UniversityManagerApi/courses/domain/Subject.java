@@ -6,25 +6,22 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Course {
+public class Subject {
 
   @NotNull
-  @NotEmpty(message = "Id cannot be empty")
   private String id;
 
-  @NotNull
-  @NotEmpty(message = "Name cannot be empty")
+  @NotEmpty
   private String name;
 
-  private Date startDate;
+  @NotEmpty
+  private String description;
 
-  private Date endDate;
+  @NotNull
+  private Course course;
 
-  private boolean active;
 }

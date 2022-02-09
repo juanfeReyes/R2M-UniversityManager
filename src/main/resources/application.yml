@@ -2,12 +2,13 @@
 spring:
   datasource:
     url: jdbc:postgresql://postgresdb:5432/uni_manager?createDatabaseIfNotExist=true
-    username: uni_manager_user
+    username: postgres
     password: password
     driver-class-name: org.postgresql.Driver
   jpa:
+    generate-ddl: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 
 springdoc:
   swagger-ui:
