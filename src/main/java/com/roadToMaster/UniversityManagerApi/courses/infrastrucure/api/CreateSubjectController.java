@@ -24,7 +24,7 @@ public class CreateSubjectController {
     this.createSubject = createSubject;
   }
 
-  @PostMapping(value = "/{courseId}/subject",produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{courseId}/subject", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.CREATED)
   public void createSubject(@PathVariable String courseId,
                             @Valid @RequestBody SubjectRequest subjectRequest) {

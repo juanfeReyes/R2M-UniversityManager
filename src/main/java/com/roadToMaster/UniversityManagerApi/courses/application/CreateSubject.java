@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CreateSubject implements ICreateSubject{
+public class CreateSubject implements ICreateSubject {
 
   private final CourseRepository courseRepository;
 
@@ -24,12 +24,12 @@ public class CreateSubject implements ICreateSubject{
   }
 
   public Subject execute(String id, String name, String description, String courseName) {
-    if(subjectRepository.existsById(id)){
+    if (subjectRepository.existsById(id)) {
       throw new ResourceAlreadyCreatedException(String.format("Subject already exists with id: %s", id));
     }
 
     var course = courseRepository.findByName(courseName);
-    if(course.isEmpty()){
+    if (course.isEmpty()) {
       throw new ResourceNotFoundException(String.format("Course with name %s does not exists", courseName));
     }
 

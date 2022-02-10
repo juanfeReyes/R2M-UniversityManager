@@ -7,7 +7,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Getter
 @AllArgsConstructor
-public class SubjectRequest{
+public class SubjectRequest {
 
   @NotEmpty
   private String id;
