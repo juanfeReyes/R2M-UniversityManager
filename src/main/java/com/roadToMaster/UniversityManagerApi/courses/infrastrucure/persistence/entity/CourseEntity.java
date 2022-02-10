@@ -35,7 +35,6 @@ public class CourseEntity {
   @Column
   private boolean active;
 
-
   public static CourseEntity toEntity(Course course) {
     return CourseEntity.builder()
         .id(course.getId())

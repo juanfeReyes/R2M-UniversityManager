@@ -1,3 +1,4 @@
-CREATE DATABASE uni_manager;
-CREATE USER uni_manager_user WITH PASSWORD 'password';
+CREATE USER uni_manager_user WITH SUPERUSER PASSWORD 'password';
+CREATE DATABASE uni_manager OWNER uni_manager_user;
 GRANT ALL PRIVILEGES ON DATABASE uni_manager TO uni_manager_user;
+CREATE SCHEMA IF NOT EXISTS  uni_manager AUTHORIZATION uni_manager_user;
