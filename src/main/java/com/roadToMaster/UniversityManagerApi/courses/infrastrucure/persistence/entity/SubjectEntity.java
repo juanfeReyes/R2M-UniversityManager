@@ -1,5 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity;
 
+import com.roadToMaster.UniversityManagerApi.courses.domain.Course;
 import com.roadToMaster.UniversityManagerApi.courses.domain.Subject;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,12 +31,20 @@ public class SubjectEntity {
       foreignKey = @ForeignKey(name = "COURSE_NAME_FK"))
   private CourseEntity course;
 
-  public static SubjectEntity toEntity(Subject subject) {
+  public static SubjectEntity toEntity(Subject subject, CourseEntity courseEntity) {
     return SubjectEntity.builder()
         .id(subject.getId())
         .name(subject.getName())
         .description(subject.getDescription())
-        .course(CourseEntity.toEntity(subject.getCourse()))
+        .course(courseEntity)
         .build();
+  }
+
+  public static Subject toDomain(SubjectEntity entity, Course course){
+    return new Subject(
+        entity.getId(),
+        entity.getName(),
+        entity.getDescription(),
+        course);
   }
 }

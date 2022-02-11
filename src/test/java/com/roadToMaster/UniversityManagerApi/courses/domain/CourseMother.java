@@ -1,6 +1,7 @@
 package com.roadToMaster.UniversityManagerApi.courses.domain;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class CourseMother {
@@ -11,7 +12,8 @@ public class CourseMother {
         "test name",
         new Date(),
         new Date(),
-        Boolean.TRUE
+        Boolean.TRUE,
+        List.of()
     );
   }
 }

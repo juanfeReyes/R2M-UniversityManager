@@ -40,9 +40,11 @@ public class CreateCourseTest extends ComponentTestBase {
 
     var courseStored = courseRepository.findByName(request.getName()).get();
 
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(response.getBody()).usingRecursiveComparison().isEqualTo(request);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    assertThat(response.getBody()).usingRecursiveComparison()
+        .ignoringFields("subjects").isEqualTo(request);
     assertThat(courseStored).usingRecursiveComparison()
+        .ignoringFields("subjects")
         .withEqualsForFields(dateComparator, "startDate", "endDate")
         .isEqualTo(request);
   }
