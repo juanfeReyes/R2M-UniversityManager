@@ -3,12 +3,15 @@ package com.roadToMaster.UniversityManagerApi.courses.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Getter
+
 @NoArgsConstructor
 @AllArgsConstructor
 public class Course {
@@ -26,4 +29,6 @@ public class Course {
   private Date endDate;
 
   private boolean active;
+
+  private List<Subject> subjects;
 }

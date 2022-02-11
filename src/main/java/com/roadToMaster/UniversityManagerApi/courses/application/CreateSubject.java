@@ -28,13 +28,13 @@ public class CreateSubject implements ICreateSubject {
       throw new ResourceAlreadyCreatedException(String.format("Subject already exists with id: %s", id));
     }
 
-    var course = courseRepository.findByName(courseName);
-    if (course.isEmpty()) {
+    var courseEntity = courseRepository.findByName(courseName);
+    if (courseEntity.isEmpty()) {
       throw new ResourceNotFoundException(String.format("Course with name %s does not exists", courseName));
     }
 
-    var subject = new Subject(id, name, description, CourseEntity.toDomain(course.get()));
-    subjectRepository.save(SubjectEntity.toEntity(subject));
+    var subject = new Subject(id, name, description, CourseEntity.toDomain(courseEntity.get()));
+    subjectRepository.save(SubjectEntity.toEntity(subject, courseEntity.get()));
 
     return subject;
   }

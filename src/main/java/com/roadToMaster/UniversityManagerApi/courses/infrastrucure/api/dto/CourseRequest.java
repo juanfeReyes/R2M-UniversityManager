@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,6 +27,7 @@ public class CourseRequest {
         courseRequestDTO.getName(),
         courseRequestDTO.getStartDate(),
         courseRequestDTO.getEndDate(),
-        courseRequestDTO.isActive());
+        courseRequestDTO.isActive(),
+        List.of());
   }
 }
