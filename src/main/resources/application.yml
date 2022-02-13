@@ -9,9 +9,22 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: update
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8180/auth/realms/university_manager_api_realm
 
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+    oauth:
+      clientId: university_manager_client
+      clientSecret: bc951319-a577-4892-bec7-bf888c1ef6d7
+      usePkceWithAuthorizationCodeGrant: true
   api-docs:
     path: /api-docs
+  oAuthFlow:
+    authorizationUrl: http://keycloak:8180/auth/realms/university_manager_api_realm/protocol/openid-connect/auth
+    tokenUrl: http://keycloak:8180/auth/realms/university_manager_api_realm/protocol/openid-connect/token
+

@@ -3,10 +3,13 @@ package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api;
 import com.roadToMaster.UniversityManagerApi.courses.application.IGetCourses;
 import com.roadToMaster.UniversityManagerApi.courses.domain.Course;
 import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.dto.PageResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +22,7 @@ import javax.validation.constraints.Min;
 @RequestMapping("course")
 @Tag(name = "Course")
 @Validated
+@SecurityRequirement(name = "basicAuth")
 public class GetCoursesController {
 
   private final IGetCourses getCourses;
@@ -28,7 +32,9 @@ public class GetCoursesController {
     this.getCourses = getCourses;
   }
 
+  @Operation(summary = "Get courses", security = {@SecurityRequirement(name = "OAuthScheme")})
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('PROFESSOR')")
   public PageResponse<Course> getCourses(@RequestParam @Min(value = 0, message = "page number must be more at least 0") int pageNumber,
                                          @RequestParam @Min(value = 1, message = "page size must be more at least 1") int pageSize) {
     var page = PageRequest.of(pageNumber, pageSize);
