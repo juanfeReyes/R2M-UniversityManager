@@ -15,6 +15,12 @@ spring:
         jwt:
           issuer-uri: http://keycloak:8180/auth/realms/university_manager_api_realm
 
+keycloak:
+  clientId: university_manager_client
+  clientSecret: bc951319-a577-4892-bec7-bf888c1ef6d7
+  realm: university_manager_api_realm
+  serverUrl: http://keycloak:8180/auth
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

@@ -1,4 +1,4 @@
-package com.roadToMaster.UniversityManagerApi.users.infrastructure.security;
+package com.roadToMaster.UniversityManagerApi.users.infrastructure.clients.keycloak;
 
 import com.roadToMaster.UniversityManagerApi.users.domain.User;
 import org.keycloak.admin.client.CreatedResponseUtil;
@@ -6,14 +6,15 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-//TODO: enable when basic auth is working
-//@Component
+@Component
 public class KeycloakClient {
 
+  @Value("${keycloak.realm}")
   private String realm;
 
   private final Keycloak keycloak;
@@ -24,7 +25,7 @@ public class KeycloakClient {
   }
 
   //TODO: update return type
-  public void registerUser(User user){
+  public String registerUser(User user){
     var usersResource = keycloak.realm(realm).users();
 
     var userRepresentation = buildUserRepresentation(user);
@@ -36,10 +37,12 @@ public class KeycloakClient {
     var createdUser = usersResource.get(userId);
     createdUser.resetPassword(passwordCredential);
 
-    var realmRole = keycloak.realm(realm).roles().get("").toRepresentation();
+    var realmRole = keycloak.realm(realm).roles().get(user.getRole().value).toRepresentation();
     createdUser.roles().realmLevel().add(List.of(realmRole));
     //Test the email functionality :D
     //createdUser.sendVerifyEmail();
+
+    return userId;
   }
 
   private UserRepresentation buildUserRepresentation(User user){
