@@ -1,6 +1,5 @@
 package com.roadToMaster.UniversityManagerApi.users.infrastructure.api;
 
-import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CourseRequest;
 import com.roadToMaster.UniversityManagerApi.users.application.ICreateUser;
 import com.roadToMaster.UniversityManagerApi.users.domain.User;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.api.dto.UserRequest;
@@ -28,7 +27,6 @@ public class CreateUserController {
     this.createUser = createUser;
   }
 
-  //TODO: use dto for request to auto generate id
   @Operation(summary = "Create User", security = {@SecurityRequirement(name = "OAuthScheme")})
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.CREATED)

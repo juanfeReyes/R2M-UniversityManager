@@ -21,15 +21,11 @@ public class CreateUser implements ICreateUser{
     this.keycloakClient = keycloakClient;
   }
 
-  //TODO: How to handle the id generation and User domain instantiation
-  //What should i pass as parameter
   public User execute(User user) {
-    //Verify user does not exists
-    if(userRepository.existsById(user.getId())){
-      throw new ResourceAlreadyCreatedException(String.format("User with id %s already exists", user.getId()));
+    if(userRepository.findByUsername(user.getUsername()).isPresent()){
+      throw new ResourceAlreadyCreatedException(String.format("User with username %s already exists", user.getUsername()));
     }
 
-    //Create user in keycloak
     var userId = keycloakClient.registerUser(user);
 
     //Save user in BD

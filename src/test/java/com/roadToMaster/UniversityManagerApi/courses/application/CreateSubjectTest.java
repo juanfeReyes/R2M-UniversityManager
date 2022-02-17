@@ -35,13 +35,13 @@ public class CreateSubjectTest {
   private ArgumentCaptor<SubjectEntity> subjectArgumentCaptor;
 
   @BeforeEach
-  public void setup(){
+  public void setup() {
     Mockito.clearInvocations(courseRepositoryMock, subjectRepository);
     createSubject = new CreateSubject(courseRepositoryMock, subjectRepository);
   }
 
   @Test
-  public void ShouldCreateSubject(){
+  public void ShouldCreateSubject() {
     var subject = SubjectMother.validSubject(CourseMother.validCourse());
     var courseEntity = CourseEntity.toEntity(subject.getCourse());
     when(subjectRepository.existsById(ArgumentMatchers.eq(subject.getId()))).thenReturn(Boolean.FALSE);
@@ -55,7 +55,7 @@ public class CreateSubjectTest {
   }
 
   @Test
-  public void ShouldThrowResourceAlreadyExists(){
+  public void ShouldThrowResourceAlreadyExists() {
     var subject = SubjectMother.validSubject(CourseMother.validCourse());
     var courseEntity = CourseEntity.toEntity(subject.getCourse());
     when(subjectRepository.existsById(ArgumentMatchers.eq(subject.getId()))).thenReturn(Boolean.TRUE);
@@ -63,12 +63,12 @@ public class CreateSubjectTest {
     assertThatThrownBy(() ->
         createSubject.execute(subject.getId(), "modernism", "moder subject", subject.getCourse().getName()))
         .isInstanceOf(ResourceAlreadyCreatedException.class)
-            .hasMessage(String.format("Subject already exists with id: %s", subject.getId()));
+        .hasMessage(String.format("Subject already exists with id: %s", subject.getId()));
     verify(subjectRepository, never()).save(subjectArgumentCaptor.capture());
   }
 
   @Test
-  public void ShouldThrowResourceNotFound(){
+  public void ShouldThrowResourceNotFound() {
     var subject = SubjectMother.validSubject(CourseMother.validCourse());
     var courseEntity = CourseEntity.toEntity(subject.getCourse());
     when(subjectRepository.existsById(ArgumentMatchers.eq(subject.getId()))).thenReturn(Boolean.FALSE);
