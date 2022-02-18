@@ -7,7 +7,6 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastructure.SubjectReque
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.CourseRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CourseEntity;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +27,14 @@ public class CreateSubjectTest extends ComponentTestBase {
   private CourseRepository courseRepository;
 
   @BeforeEach
-  public void init(){
+  public void init() {
     subjectRepository.deleteAll();
     courseRepository.deleteAll();
     courseRepository.save(CourseEntity.toEntity(CourseMother.validCourse()));
   }
 
   @Test
-  public void ShouldCreateSubject(){
+  public void ShouldCreateSubject() {
     var expectedSubject = SubjectMother.validSubject(CourseMother.validCourse());
 
     var request = SubjectRequestMother.buildSubjectRequest(expectedSubject);

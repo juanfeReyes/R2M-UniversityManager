@@ -28,13 +28,13 @@ public class GetCoursesTest {
   private CourseRepository courseRepository;
 
   @BeforeEach
-  public void init(){
+  public void init() {
     Mockito.clearInvocations(courseRepository);
     getCourses = new GetCourses(courseRepository);
   }
 
   @Test
-  public void shouldGetCourses(){
+  public void shouldGetCourses() {
     var expectedCourse = CourseMother.validCourse();
     var page = new PageImpl<CourseEntity>(List.of(CourseEntity.toEntity(expectedCourse)));
     when(courseRepository.findAll(any(Pageable.class))).thenReturn(page);

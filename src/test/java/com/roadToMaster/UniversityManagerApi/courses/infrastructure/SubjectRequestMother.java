@@ -5,7 +5,7 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.Subje
 
 public class SubjectRequestMother {
 
-  public static SubjectRequest buildSubjectRequest(Subject subject){
+  public static SubjectRequest buildSubjectRequest(Subject subject) {
     return new SubjectRequest(
         subject.getId(),
         subject.getName(),
