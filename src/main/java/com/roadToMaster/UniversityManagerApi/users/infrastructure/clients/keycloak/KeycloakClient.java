@@ -14,18 +14,16 @@ import java.util.List;
 @Component
 public class KeycloakClient {
 
+  private final Keycloak keycloak;
   @Value("${keycloak.realm}")
   private String realm;
 
-  private final Keycloak keycloak;
-
   @Autowired
-  public KeycloakClient(Keycloak keycloak){
+  public KeycloakClient(Keycloak keycloak) {
     this.keycloak = keycloak;
   }
 
-  //TODO: update return type
-  public String registerUser(User user){
+  public String registerUser(User user) {
     var usersResource = keycloak.realm(realm).users();
 
     var userRepresentation = buildUserRepresentation(user);
@@ -39,13 +37,12 @@ public class KeycloakClient {
 
     var realmRole = keycloak.realm(realm).roles().get(user.getRole().value).toRepresentation();
     createdUser.roles().realmLevel().add(List.of(realmRole));
-    //Test the email functionality :D
-    //createdUser.sendVerifyEmail();
+
 
     return userId;
   }
 
-  private UserRepresentation buildUserRepresentation(User user){
+  private UserRepresentation buildUserRepresentation(User user) {
     var userRepresentation = new UserRepresentation();
     userRepresentation.setEnabled(user.isActive());
     userRepresentation.setUsername(user.getUsername());
@@ -56,7 +53,7 @@ public class KeycloakClient {
     return userRepresentation;
   }
 
-  private CredentialRepresentation buildPassword(){
+  private CredentialRepresentation buildPassword() {
     var passwordCredential = new CredentialRepresentation();
     passwordCredential.setTemporary(false);
     passwordCredential.setType(CredentialRepresentation.PASSWORD);

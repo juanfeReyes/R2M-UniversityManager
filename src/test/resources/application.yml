@@ -10,15 +10,6 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create-drop
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          issuer-uri: http://keycloak:8180/auth/realms/university_manager_api_realm
-
-management.security.enabled: false
-management.health.db.enabled: false
-security.basic.enabled: false
 
 keycloak:
   clientId: test

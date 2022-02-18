@@ -26,7 +26,7 @@ public class CreateUser implements ICreateUser{
       throw new ResourceAlreadyCreatedException(String.format("User with username %s already exists", user.getUsername()));
     }
 
-    var userId = keycloakClient.registerUser(user);
+    keycloakClient.registerUser(user);
 
     //Save user in BD
     userRepository.save(UserEntity.toEntity(user));
