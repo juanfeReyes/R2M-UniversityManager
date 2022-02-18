@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//TODO: Enable when basic auth is working
 @Configuration
 public class KeycloakClientConfiguration {
 

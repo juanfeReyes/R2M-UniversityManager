@@ -70,5 +70,3 @@ public class CreateCourseTest extends ComponentTestBase {
     assertThat(response.getBody().getFieldsError()).containsExactly("Name cannot be empty");
   }
 }
-
-
