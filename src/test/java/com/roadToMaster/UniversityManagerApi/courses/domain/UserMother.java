@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class UserMother {
 
-  public static User buildValid(){
+  public static User buildValid() {
     return new User(
         UUID.randomUUID().toString(),
         "test username",

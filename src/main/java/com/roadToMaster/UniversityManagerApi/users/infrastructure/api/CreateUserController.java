@@ -31,7 +31,7 @@ public class CreateUserController {
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.CREATED)
   @PreAuthorize("hasRole('ADMIN')")
-  public User createUser(@Valid @RequestBody UserRequest userRequest){
+  public User createUser(@Valid @RequestBody UserRequest userRequest) {
     return createUser.execute(UserRequest.toDomain(userRequest));
   }
 }
