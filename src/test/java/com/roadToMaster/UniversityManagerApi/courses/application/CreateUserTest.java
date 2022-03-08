@@ -43,6 +43,7 @@ public class CreateUserTest {
 
   @Test
   public void shouldSaveCreateUser() {
+
     var user = UserMother.buildValid();
     when(userRepositoryMock.findByUsername(anyString())).thenReturn(Optional.empty());
     when(keycloakClient.registerUser(any())).thenReturn("userId");
@@ -56,6 +57,7 @@ public class CreateUserTest {
 
   @Test
   public void shouldThrowExceptionWhenUsernameAlreadyExists() {
+
     var user = UserMother.buildValid();
     when(userRepositoryMock.findByUsername(anyString())).thenReturn(Optional.of(UserEntity.toEntity(user)));
 

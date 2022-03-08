@@ -54,6 +54,7 @@ public class CreateSubjectTest {
     var professor = UserMother.buildValid();
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
     var subject = SubjectMother.validSubject(CourseMother.validCourse(), professor, schedules);
+
     var courseEntity = CourseEntity.toEntity(subject.getCourse());
 
     when(subjectRepository.existsById(ArgumentMatchers.eq(subject.getId()))).thenReturn(Boolean.FALSE);
@@ -75,6 +76,7 @@ public class CreateSubjectTest {
     var professor = UserMother.buildValid();
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
     var subject = SubjectMother.validSubject(CourseMother.validCourse(), professor, schedules);
+
     when(subjectRepository.existsById(ArgumentMatchers.eq(subject.getId()))).thenReturn(Boolean.TRUE);
 
     assertThatThrownBy(() ->

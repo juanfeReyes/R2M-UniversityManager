@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 public class SubjectRequestMother {
 
   public static SubjectRequest buildSubjectRequest(Subject subject) {
-
     return new SubjectRequest(
         subject.getId(),
         subject.getName(),
