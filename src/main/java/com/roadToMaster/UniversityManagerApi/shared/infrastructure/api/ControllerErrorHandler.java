@@ -1,6 +1,7 @@
 package com.roadToMaster.UniversityManagerApi.shared.infrastructure.api;
 
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceAlreadyCreatedException;
+import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceConflictException;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,15 +17,15 @@ import java.util.ArrayList;
 public class ControllerErrorHandler extends ResponseEntityExceptionHandler {
 
   @ResponseBody
-  @ExceptionHandler(value = {ResourceAlreadyCreatedException.class})
-  public ResponseEntity<ErrorResponse> handleResourceAlreadyCreatedException(ResourceAlreadyCreatedException exception) {
+  @ExceptionHandler(value = {ResourceConflictException.class})
+  public ResponseEntity<ErrorResponse> handleResourceConflictException(ResourceConflictException exception) {
     var errorMessage = new ErrorResponse(exception.getMessage());
     return new ResponseEntity<ErrorResponse>(errorMessage, HttpStatus.CONFLICT);
   }
 
   @ResponseBody
   @ExceptionHandler(value = {ResourceNotFoundException.class})
-  public ResponseEntity<ErrorResponse> handleResourceNotFoundExceptionException(ResourceNotFoundException exception) {
+  public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException exception) {
     var errorMessage = new ErrorResponse(exception.getMessage());
     return new ResponseEntity<ErrorResponse>(errorMessage, HttpStatus.NOT_FOUND);
   }

@@ -123,7 +123,7 @@ public class CreateSubjectTest {
         createSubject.execute(subject.getId(), "modernism", "moder subject",
             subject.getCourse().getName(), professor.getUsername(), schedules))
         .isInstanceOf(ScheduleConflictException.class)
-        .hasMessage("Cannot create subject the following schedules overlap with professors schedules");
+        .hasMessage("Cannot create subject schedules overlap with professors schedules");
     verify(subjectRepository, never()).save(subjectArgumentCaptor.capture());
   }
 }

@@ -31,7 +31,7 @@ public class Schedule {
     var newStartHours = newSchedule.startTime;
     var newEndHours = newSchedule.endTime;
 
-    return (startHours.isAfter(newStartHours) && startHours.isBefore(newEndHours)) ||
-        (endHours.isAfter(newStartHours) && endHours.isBefore(newEndHours));
+    return (startHours.equals(newStartHours) || startHours.isAfter(newStartHours) && startHours.isBefore(newEndHours)) ||
+        (endHours.isAfter(newStartHours) && endHours.isBefore(newEndHours) || endHours.equals(newEndHours));
   }
 }

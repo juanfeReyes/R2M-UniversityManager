@@ -68,7 +68,7 @@ public class CreateSubject implements ICreateSubject {
     var overlappedSchedules = computeOverlappedSchedules(schedules, professorSchedules);
 
     if (!overlappedSchedules.isEmpty()) {
-      throw new ScheduleConflictException("Cannot create subject the following schedules overlap with professors schedules", overlappedSchedules);
+      throw new ScheduleConflictException("Cannot create subject schedules overlap with professors schedules", overlappedSchedules);
     }
 
     //Add subjects
