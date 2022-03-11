@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+
 public class CreateUser implements ICreateUser{
 
   private final UserRepository userRepository;
@@ -22,6 +23,7 @@ public class CreateUser implements ICreateUser{
   }
 
   public User execute(User user) {
+
     if(userRepository.findByUsername(user.getUsername()).isPresent()){
       throw new ResourceAlreadyCreatedException(String.format("User with username %s already exists", user.getUsername()));
     }

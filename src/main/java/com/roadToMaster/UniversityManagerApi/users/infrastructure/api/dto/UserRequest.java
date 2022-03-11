@@ -17,6 +17,7 @@ public class UserRequest {
   private String role;
   private boolean active;
 
+
   public static User toDomain(UserRequest userRequest){
     return new User(
         UUID.randomUUID().toString(),

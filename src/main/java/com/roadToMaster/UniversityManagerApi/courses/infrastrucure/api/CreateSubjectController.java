@@ -1,8 +1,13 @@
 package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api;
 
 import com.roadToMaster.UniversityManagerApi.courses.application.ICreateSubject;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.ScheduleRequest;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.SubjectRequest;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.stream.Collectors;
 
 @RestController
 @Validated
@@ -29,13 +35,14 @@ public class CreateSubjectController {
   }
 
   @Operation(summary = "Create Subject", security = {@SecurityRequirement(name = "OAuthScheme")})
-  @PostMapping(value = "/{courseId}/subject", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{courseName}/subject", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.CREATED)
   @PreAuthorize("hasRole('PROFESSOR')")
-  public void createSubject(@PathVariable String courseId,
+  public void createSubject(@PathVariable String courseName,
                             @Valid @RequestBody SubjectRequest subjectRequest) {
-
+    var schedules = subjectRequest.getSchedules().stream().map(ScheduleRequest::toDomain)
+        .collect(Collectors.toList());
     createSubject.execute(subjectRequest.getId(), subjectRequest.getName(),
-        subjectRequest.getDescription(), courseId);
+        subjectRequest.getDescription(), courseName, subjectRequest.getProfessorUserName(), schedules);
   }
 }

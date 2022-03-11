@@ -1,5 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity;
 
+import com.roadToMaster.UniversityManagerApi.users.domain.RoleEnum;
 import com.roadToMaster.UniversityManagerApi.users.domain.User;
 import lombok.*;
 
@@ -38,7 +39,7 @@ public class UserEntity {
   @Column
   private boolean active;
 
-  public static UserEntity toEntity(User user){
+  public static UserEntity toEntity(User user) {
     return UserEntity.builder()
         .id(user.getId())
         .username(user.getUsername())
@@ -48,5 +49,16 @@ public class UserEntity {
         .role(user.getRole().toString())
         .active(user.isActive())
         .build();
+  }
+
+  public static User toDomain(UserEntity userEntity) {
+    return new User(
+        userEntity.getId(),
+        userEntity.getUsername(),
+        userEntity.getFirstName(),
+        userEntity.getLastName(),
+        userEntity.getEmail(),
+        RoleEnum.valueOf(userEntity.getRole()),
+        userEntity.isActive());
   }
 }

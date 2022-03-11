@@ -37,12 +37,13 @@ public class CreateUserTest {
   private CreateUser createUser;
 
   @BeforeEach
-  public void init(){
+  public void init() {
     this.createUser = new CreateUser(userRepositoryMock, keycloakClient);
   }
 
   @Test
-  public void shouldSaveCreateUser(){
+  public void shouldSaveCreateUser() {
+
     var user = UserMother.buildValid();
     when(userRepositoryMock.findByUsername(anyString())).thenReturn(Optional.empty());
     when(keycloakClient.registerUser(any())).thenReturn("userId");
@@ -55,7 +56,8 @@ public class CreateUserTest {
   }
 
   @Test
-  public void shouldThrowExceptionWhenUsernameAlreadyExists(){
+  public void shouldThrowExceptionWhenUsernameAlreadyExists() {
+
     var user = UserMother.buildValid();
     when(userRepositoryMock.findByUsername(anyString())).thenReturn(Optional.of(UserEntity.toEntity(user)));
 
