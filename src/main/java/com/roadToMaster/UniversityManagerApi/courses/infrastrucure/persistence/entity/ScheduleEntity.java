@@ -16,7 +16,6 @@ import java.time.LocalTime;
 @NoArgsConstructor
 public class ScheduleEntity {
 
-  //TODO: Complete entity
   @Id
   private String id;
 
