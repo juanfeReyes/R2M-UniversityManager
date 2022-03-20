@@ -61,7 +61,7 @@ public class CreateSubjectTest {
     when(courseRepositoryMock.findByName(ArgumentMatchers.eq(subject.getCourse().getName()))).thenReturn(Optional.of(courseEntity));
     when(userRepository.findByUsername(eq(professor.getUsername()))).thenReturn(Optional.of(UserEntity.toEntity(professor)));
 
-    createSubject.execute(subject.getId(), "modernism", "moder subject",
+    createSubject.execute(subject.getId(), subject.getName(), subject.getDescription(),
         subject.getCourse().getName(), professor.getUsername(), schedules);
 
 

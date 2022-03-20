@@ -10,8 +10,6 @@ import java.util.Date;
 import java.util.List;
 
 @Getter
-
-@NoArgsConstructor
 @AllArgsConstructor
 public class Course {
 

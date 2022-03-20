@@ -1,5 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.courses.domain;
 
+import com.roadToMaster.UniversityManagerApi.FakerUtil;
 import com.roadToMaster.UniversityManagerApi.users.domain.User;
 
 import java.util.List;
@@ -7,10 +8,11 @@ import java.util.List;
 public class SubjectMother {
 
   public static Subject validSubject(Course course, User professor, List<Schedule> schedules) {
+    var faker = FakerUtil.buildFaker();
     return new Subject(
-        "123",
-        "modernism",
-        "moder subject",
+        faker.internet().uuid(),
+        faker.artist().name(),
+        faker.university().name(),
         course,
         schedules,
         professor);

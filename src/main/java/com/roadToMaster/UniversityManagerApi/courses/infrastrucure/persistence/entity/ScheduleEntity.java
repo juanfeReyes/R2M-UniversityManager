@@ -3,6 +3,7 @@ package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.
 import com.roadToMaster.UniversityManagerApi.courses.domain.DayEnum;
 import com.roadToMaster.UniversityManagerApi.courses.domain.Schedule;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalTime;
@@ -17,6 +18,11 @@ import java.time.LocalTime;
 public class ScheduleEntity {
 
   @Id
+  @GeneratedValue(generator = "UUID")
+  @GenericGenerator(
+      name = "UUID",
+      strategy = "org.hibernate.id.UUIDGenerator"
+  )
   private String id;
 
   @Column

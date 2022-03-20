@@ -30,7 +30,6 @@ public class CreateUserController {
   @Operation(summary = "Create User", security = {@SecurityRequirement(name = "OAuthScheme")})
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.CREATED)
-  @PreAuthorize("hasRole('ADMIN')")
   public User createUser(@Valid @RequestBody UserRequest userRequest) {
     return createUser.execute(UserRequest.toDomain(userRequest));
   }

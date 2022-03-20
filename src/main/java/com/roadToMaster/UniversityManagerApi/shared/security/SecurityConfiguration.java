@@ -1,8 +1,8 @@
-package com.roadToMaster.UniversityManagerApi.shared;
+package com.roadToMaster.UniversityManagerApi.shared.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,7 +14,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 @Profile("!test")
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Override
@@ -28,6 +27,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         .antMatchers("/swagger-ui.html/**", "/swagger-ui/**", "/api-docs/**")
         .permitAll()
+        .antMatchers(HttpMethod.POST, "/course").hasRole("DIRECTOR")
+        .antMatchers(HttpMethod.POST, "/course/*/subject").hasRole("PROFESSOR")
+        .antMatchers(HttpMethod.GET, "/course").hasRole("PROFESSOR")
+        .antMatchers(HttpMethod.POST, "/user/**").hasRole("ADMIN")
         .anyRequest()
         .authenticated()
         .and()

@@ -4,6 +4,7 @@ import com.roadToMaster.UniversityManagerApi.component.ComponentTestBase;
 import com.roadToMaster.UniversityManagerApi.courses.domain.Course;
 import com.roadToMaster.UniversityManagerApi.courses.infrastructure.CourseRequestMother;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CourseRequest;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CoursesMapper;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.CourseRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CourseEntity;
 import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.ErrorResponse;
@@ -22,6 +23,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CreateCourseTest extends ComponentTestBase {
 
   public static final String COURSE_URL = "/course";
+
+  @Autowired
+  private CoursesMapper mapper;
 
   @Autowired
   public CourseRepository courseRepository;
@@ -53,7 +57,7 @@ public class CreateCourseTest extends ComponentTestBase {
   public void shouldReturnConflictWhenCourseExist() {
     var request = CourseRequestMother.buildValidRequest();
 
-    courseRepository.save(CourseEntity.toEntity(CourseRequest.toDomain(request)));
+    courseRepository.save(CourseEntity.toEntity(mapper.courseRequestToCourse(request)));
     var response = restTemplate.postForEntity(COURSE_URL, request, ErrorResponse.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);

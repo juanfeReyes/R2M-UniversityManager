@@ -34,7 +34,6 @@ public class GetCoursesController {
 
   @Operation(summary = "Get courses", security = {@SecurityRequirement(name = "OAuthScheme")})
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("hasRole('PROFESSOR')")
   public PageResponse<Course> getCourses(@RequestParam @Min(value = 0, message = "page number must be more at least 0") int pageNumber,
                                          @RequestParam @Min(value = 1, message = "page size must be more at least 1") int pageSize) {
     var page = PageRequest.of(pageNumber, pageSize);
