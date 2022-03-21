@@ -2,7 +2,7 @@ package com.roadToMaster.UniversityManagerApi.courses.application;
 
 import com.roadToMaster.UniversityManagerApi.courses.domain.Course;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.CourseRepository;
-import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CourseEntity;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceAlreadyCreatedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +14,13 @@ import javax.validation.Valid;
 @Validated
 public class CreateCourse implements ICreateCourse {
 
+  private final CoursesEntityMapper entityMapper;
+
   private final CourseRepository courseRepository;
 
   @Autowired
-  public CreateCourse(CourseRepository courseRepository) {
+  public CreateCourse(CoursesEntityMapper entityMapper, CourseRepository courseRepository) {
+    this.entityMapper = entityMapper;
     this.courseRepository = courseRepository;
   }
 
@@ -26,7 +29,7 @@ public class CreateCourse implements ICreateCourse {
       throw new ResourceAlreadyCreatedException(String.format("Course with name: %s already exists", course.getName()));
     }
 
-    courseRepository.save(CourseEntity.toEntity(course));
+    courseRepository.save(entityMapper.courseToEntity(course));
 
     return course;
   }

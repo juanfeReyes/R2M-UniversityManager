@@ -1,17 +1,10 @@
 package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.roadToMaster.UniversityManagerApi.courses.domain.DayEnum;
-import com.roadToMaster.UniversityManagerApi.courses.domain.Schedule;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -38,14 +31,4 @@ public class ScheduleRequest {
 
   @Schema(example = "")
   private String description;
-
-  public static Schedule toDomain(ScheduleRequest request) {
-    return new Schedule(
-        UUID.randomUUID().toString(),
-        DayEnum.valueOf(request.day),
-        LocalTime.parse(request.startHours, DateTimeFormatter.ofPattern(HOUR_PATTERN)),
-        LocalTime.parse(request.endHours, DateTimeFormatter.ofPattern(HOUR_PATTERN)),
-        request.getDescription()
-    );
-  }
 }

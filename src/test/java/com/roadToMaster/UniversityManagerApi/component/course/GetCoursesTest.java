@@ -4,7 +4,9 @@ import com.roadToMaster.UniversityManagerApi.component.ComponentTestBase;
 import com.roadToMaster.UniversityManagerApi.courses.domain.Course;
 import com.roadToMaster.UniversityManagerApi.courses.domain.CourseMother;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.CourseRepository;
-import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CourseEntity;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.ScheduleRepository;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
 import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.ErrorResponse;
 import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.dto.PageResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,17 +31,26 @@ public class GetCoursesTest extends ComponentTestBase {
   @Autowired
   public CourseRepository courseRepository;
 
+  @Autowired
+  public SubjectRepository subjectRepository;
+
+  @Autowired
+  public ScheduleRepository scheduleRepository;
   BiPredicate<Timestamp, Date> dateComparator = (expected, actual) -> expected.toInstant().compareTo(actual.toInstant()) == 0;
+  @Autowired
+  private CoursesEntityMapper entityMapper;
 
   @BeforeEach
   public void init() {
+    scheduleRepository.deleteAll();
+    subjectRepository.deleteAll();
     courseRepository.deleteAll();
   }
 
   @Test
   public void shouldGetCourses() {
     var course = CourseMother.validCourse();
-    courseRepository.save(CourseEntity.toEntity(course));
+    courseRepository.save(entityMapper.courseToEntity(course));
 
     var url = UriComponentsBuilder.fromUriString(COURSE_URL)
         .queryParam("pageNumber", 0)

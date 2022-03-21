@@ -11,7 +11,7 @@ public interface CoursesMapper {
   @Mapping(target = "subjects", expression = "java(List.of())")
   Course courseRequestToCourse(CourseRequest courseRequest);
 
-  @Mapping(target = "startTime", source = "startHours" ,dateFormat = "HH:mm")
+  @Mapping(target = "startTime", source = "startHours", dateFormat = "HH:mm")
   @Mapping(target = "endTime", source = "endHours", dateFormat = "HH:mm")
   Schedule scheduleRequestToSchedule(ScheduleRequest request);
 }
