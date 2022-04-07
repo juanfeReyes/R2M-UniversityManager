@@ -3,6 +3,8 @@ package com.roadToMaster.UniversityManagerApi.courses.application;
 import com.roadToMaster.UniversityManagerApi.courses.domain.CourseMother;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.CourseRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CourseEntity;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapperImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +24,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class GetCoursesTest {
 
+  private final CoursesEntityMapper entityMapper = new CoursesEntityMapperImpl();
+
   private GetCourses getCourses;
 
   @Mock
@@ -30,13 +34,13 @@ public class GetCoursesTest {
   @BeforeEach
   public void init() {
     Mockito.clearInvocations(courseRepository);
-    getCourses = new GetCourses(courseRepository);
+    getCourses = new GetCourses(entityMapper, courseRepository);
   }
 
   @Test
   public void shouldGetCourses() {
     var expectedCourse = CourseMother.validCourse();
-    var page = new PageImpl<CourseEntity>(List.of(CourseEntity.toEntity(expectedCourse)));
+    var page = new PageImpl<CourseEntity>(List.of(entityMapper.courseToEntity(expectedCourse)));
     when(courseRepository.findAll(any(Pageable.class))).thenReturn(page);
 
     var pageable = PageRequest.of(1, 5);

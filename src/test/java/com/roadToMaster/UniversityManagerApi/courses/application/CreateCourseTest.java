@@ -3,6 +3,8 @@ package com.roadToMaster.UniversityManagerApi.courses.application;
 import com.roadToMaster.UniversityManagerApi.courses.domain.CourseMother;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.CourseRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CourseEntity;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapperImpl;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceAlreadyCreatedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class CreateCourseTest {
 
+  private final CoursesEntityMapper entityMapper = new CoursesEntityMapperImpl();
+
   @Mock
   private CourseRepository courseRepositoryMock;
 
@@ -33,7 +37,7 @@ class CreateCourseTest {
   @BeforeEach
   public void init() {
     Mockito.clearInvocations(courseRepositoryMock);
-    this.createCourse = new CreateCourse(courseRepositoryMock);
+    this.createCourse = new CreateCourse(entityMapper, courseRepositoryMock);
   }
 
   @Test
@@ -51,7 +55,7 @@ class CreateCourseTest {
   @Test
   public void ShouldThrowExceptionWhenCourseExists() {
     var course = CourseMother.validCourse();
-    when(courseRepositoryMock.findByName(anyString())).thenReturn(Optional.of(CourseEntity.toEntity(course)));
+    when(courseRepositoryMock.findByName(anyString())).thenReturn(Optional.of(entityMapper.courseToEntity(course)));
 
     assertThatThrownBy(() -> {
       createCourse.execute(course);

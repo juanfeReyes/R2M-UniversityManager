@@ -3,9 +3,9 @@ package com.roadToMaster.UniversityManagerApi.component.course;
 import com.roadToMaster.UniversityManagerApi.component.ComponentTestBase;
 import com.roadToMaster.UniversityManagerApi.courses.domain.Course;
 import com.roadToMaster.UniversityManagerApi.courses.infrastructure.CourseRequestMother;
-import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CourseRequest;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CoursesMapper;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.CourseRepository;
-import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CourseEntity;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
 import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.ErrorResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,11 +22,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CreateCourseTest extends ComponentTestBase {
 
   public static final String COURSE_URL = "/course";
-
   @Autowired
   public CourseRepository courseRepository;
-
   BiPredicate<Timestamp, Date> dateComparator = (expected, actual) -> expected.toInstant().compareTo(actual.toInstant()) == 0;
+  @Autowired
+  private CoursesMapper mapper;
+  @Autowired
+  private CoursesEntityMapper entityMapper;
 
   @BeforeEach
   public void init() {
@@ -53,7 +55,7 @@ public class CreateCourseTest extends ComponentTestBase {
   public void shouldReturnConflictWhenCourseExist() {
     var request = CourseRequestMother.buildValidRequest();
 
-    courseRepository.save(CourseEntity.toEntity(CourseRequest.toDomain(request)));
+    courseRepository.save(entityMapper.courseToEntity(mapper.courseRequestToCourse(request)));
     var response = restTemplate.postForEntity(COURSE_URL, request, ErrorResponse.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);

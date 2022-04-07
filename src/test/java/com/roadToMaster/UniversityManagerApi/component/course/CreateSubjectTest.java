@@ -7,12 +7,12 @@ import com.roadToMaster.UniversityManagerApi.courses.domain.SubjectMother;
 import com.roadToMaster.UniversityManagerApi.courses.domain.UserMother;
 import com.roadToMaster.UniversityManagerApi.courses.infrastructure.SubjectRequestMother;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.CourseRepository;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.ScheduleRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
-import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CourseEntity;
-import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.ScheduleEntity;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.SubjectEntity;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
-import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntity;
+import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +31,19 @@ public class CreateSubjectTest extends ComponentTestBase {
   private static final String SUBJECT_URL = "/course/{courseName}/subject";
 
   @Autowired
+  private CoursesEntityMapper entityMapper;
+
+  @Autowired
+  private UserEntityMapper userEntityMapper;
+
+  @Autowired
   private SubjectRepository subjectRepository;
 
   @Autowired
   private CourseRepository courseRepository;
+
+  @Autowired
+  private ScheduleRepository scheduleRepository;
 
   @Autowired
   private UserRepository userRepository;
@@ -44,6 +53,7 @@ public class CreateSubjectTest extends ComponentTestBase {
 
   @BeforeEach
   public void init() {
+    scheduleRepository.deleteAll();
     subjectRepository.deleteAll();
     courseRepository.deleteAll();
     userRepository.deleteAll();
@@ -51,26 +61,25 @@ public class CreateSubjectTest extends ComponentTestBase {
 
   @Test
   public void ShouldCreateSubject() {
-    //TODO: save user in DB
+    var course = CourseMother.validCourse();
     var professor = UserMother.buildValid();
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
-    var expectedSubject = SubjectMother.validSubject(CourseMother.validCourse(), professor, schedules);
+    var expectedSubject = SubjectMother.validSubject(professor, schedules);
 
-    userRepository.save(UserEntity.toEntity(professor));
-    courseRepository.save(CourseEntity.toEntity(expectedSubject.getCourse()));
+    userRepository.save(userEntityMapper.userToEntity(professor));
+    courseRepository.save(entityMapper.courseToEntity(course));
 
     var request = SubjectRequestMother.buildSubjectRequest(expectedSubject);
 
     var response = restTemplate.exchange(SUBJECT_URL, HttpMethod.POST, new HttpEntity<>(request),
-        Void.class, expectedSubject.getCourse().getName());
+        Void.class, course.getName());
 
-    var subjectSaved = entityManager.createQuery("SELECT s FROM SubjectEntity s LEFT JOIN FETCH s.schedules", SubjectEntity.class).getResultList().get(0);
-    var savedSchedules = subjectSaved.getSchedules().stream().map(ScheduleEntity::toDomain).collect(Collectors.toList());
+    var savedSubject = subjectRepository.findByProfessorUsername(professor.getUsername());
+    var savedSchedules = scheduleRepository.findBySubjectId(savedSubject.stream().map(SubjectEntity::getId).collect(Collectors.toList()));
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-    assertThat(subjectSaved).usingRecursiveComparison()
+    assertThat(savedSubject).first().usingRecursiveComparison()
         .ignoringFields("course", "professor", "schedules").isEqualTo(expectedSubject);
-    assertThat(savedSchedules).usingRecursiveComparison().ignoringFields("id").isEqualTo(schedules);
+    assertThat(savedSchedules.stream().map(entityMapper::scheduleToDomain).collect(Collectors.toList()))
+        .usingRecursiveComparison().ignoringFields("id").isEqualTo(schedules);
   }
-
-
 }

@@ -1,6 +1,7 @@
 package com.roadToMaster.UniversityManagerApi.users.infrastructure.clients.keycloak;
 
 import com.roadToMaster.UniversityManagerApi.users.domain.User;
+import com.roadToMaster.UniversityManagerApi.users.infrastructure.clients.IUserProviderClient;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.CredentialRepresentation;
@@ -11,8 +12,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
-public class KeycloakClient {
+@Component(value = "keycloakClient")
+public class KeycloakClient implements IUserProviderClient {
 
   private final Keycloak keycloak;
   @Value("${keycloak.realm}")

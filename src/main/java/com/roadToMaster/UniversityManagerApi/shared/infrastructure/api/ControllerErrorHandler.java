@@ -1,6 +1,5 @@
 package com.roadToMaster.UniversityManagerApi.shared.infrastructure.api;
 
-import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceAlreadyCreatedException;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceConflictException;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;

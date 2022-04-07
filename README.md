@@ -11,3 +11,7 @@ Run the following command inside de docker container:
 -Dkeycloak.migration.usersExportStrategy=REALM_FILE \
 -Dkeycloak.migration.file=/tmp/university-manager-api-realm.json
 ```
+
+## Local configuration for Development
+Set the following value environmental value to enable local configuration with docker-compose-local.yml
+SPRING_PROFILES_ACTIVE = local
