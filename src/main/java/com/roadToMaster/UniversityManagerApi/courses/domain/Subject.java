@@ -3,14 +3,13 @@ package com.roadToMaster.UniversityManagerApi.courses.domain;
 import com.roadToMaster.UniversityManagerApi.users.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
+//@NoArgsConstructor
 @AllArgsConstructor
 public class Subject {
 
@@ -22,9 +21,6 @@ public class Subject {
 
   @NotEmpty
   private String description;
-
-  @NotNull
-  private Course course;
 
   private List<Schedule> schedules;
 

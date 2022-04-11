@@ -5,8 +5,9 @@ import com.github.javafaker.Faker;
 import java.util.Random;
 
 public class FakerUtil {
+  private static final Random seed = new Random(1);
 
   public static Faker buildFaker() {
-    return new Faker(new Random(1));
+    return new Faker(seed);
   }
 }

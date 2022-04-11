@@ -3,9 +3,12 @@ package com.roadToMaster.UniversityManagerApi.courses.application;
 import com.roadToMaster.UniversityManagerApi.courses.domain.UserMother;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceAlreadyCreatedException;
 import com.roadToMaster.UniversityManagerApi.users.application.CreateUser;
+import com.roadToMaster.UniversityManagerApi.users.infrastructure.clients.cognito.CognitoClient;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.clients.keycloak.KeycloakClient;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntity;
+import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapper;
+import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapperImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,11 +28,16 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class CreateUserTest {
 
+  private final UserEntityMapper userEntityMapper = new UserEntityMapperImpl();
+
   @Mock
   private UserRepository userRepositoryMock;
 
   @Mock
   private KeycloakClient keycloakClient;
+
+  @Mock
+  private CognitoClient cognitoClient;
 
   @Captor
   private ArgumentCaptor<UserEntity> userEntityCaptor;
@@ -38,7 +46,7 @@ public class CreateUserTest {
 
   @BeforeEach
   public void init() {
-    this.createUser = new CreateUser(userRepositoryMock, keycloakClient);
+    this.createUser = new CreateUser(userEntityMapper, userRepositoryMock, cognitoClient);
   }
 
   @Test
@@ -59,7 +67,7 @@ public class CreateUserTest {
   public void shouldThrowExceptionWhenUsernameAlreadyExists() {
 
     var user = UserMother.buildValid();
-    when(userRepositoryMock.findByUsername(anyString())).thenReturn(Optional.of(UserEntity.toEntity(user)));
+    when(userRepositoryMock.findByUsername(anyString())).thenReturn(Optional.of(userEntityMapper.userToEntity(user)));
 
     assertThatThrownBy(() -> {
       createUser.execute(user);

@@ -1,21 +1,25 @@
-package com.roadToMaster.UniversityManagerApi.shared;
+package com.roadToMaster.UniversityManagerApi.shared.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.server.resource.authentication.DelegatingJwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
 @Profile("!test")
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+  @Value("${springdoc.oAuthFlow.resourceServerIdentifier}")
+  private String resourceServerIdentifier;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -28,6 +32,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         .antMatchers("/swagger-ui.html/**", "/swagger-ui/**", "/api-docs/**")
         .permitAll()
+        .antMatchers(HttpMethod.POST, "/course").hasAuthority(String.format("%s/%s", resourceServerIdentifier, SecurityAuthority.course_write.getItem()))
+        .antMatchers(HttpMethod.POST, "/course/*/subject").hasAuthority(String.format("%s/%s", resourceServerIdentifier, SecurityAuthority.subject_write.getItem()))
+        .antMatchers(HttpMethod.GET, "/course").hasAuthority(String.format("%s/%s", resourceServerIdentifier, SecurityAuthority.course_read.getItem()))
+        .antMatchers(HttpMethod.POST, "/user/**").hasAuthority("ADMIN")
         .anyRequest()
         .authenticated()
         .and()
@@ -46,10 +54,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   JwtAuthenticationConverter getJwtAuthToken() {
     var converter = new JwtAuthenticationConverter();
-    var grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-    grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
-    grantedAuthoritiesConverter.setAuthorityPrefix("");
-    converter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+
+    var groupAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+    groupAuthoritiesConverter.setAuthoritiesClaimName("cognito:groups");
+    groupAuthoritiesConverter.setAuthorityPrefix("");
+
+    var scopeAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+    scopeAuthoritiesConverter.setAuthorityPrefix("");
+
+    var compositeAuthorities = new DelegatingJwtGrantedAuthoritiesConverter(groupAuthoritiesConverter, scopeAuthoritiesConverter);
+    converter.setJwtGrantedAuthoritiesConverter(compositeAuthorities);
     return converter;
   }
 }

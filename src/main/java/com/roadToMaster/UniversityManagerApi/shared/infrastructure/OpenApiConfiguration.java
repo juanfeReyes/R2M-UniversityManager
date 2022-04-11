@@ -1,5 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.shared.infrastructure;
 
+import com.roadToMaster.UniversityManagerApi.shared.security.SecurityAuthority;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.*;
@@ -10,6 +11,9 @@ import org.springframework.context.annotation.Configuration;
 //TODO: Enable when security configuration is working
 @Configuration
 public class OpenApiConfiguration {
+
+  @Value("${springdoc.oAuthFlow.resourceServerIdentifier}")
+  private String resourceServerIdentifier;
 
   @Value("${springdoc.oAuthFlow.authorizationUrl}")
   private String authorizationUrl;
@@ -30,7 +34,10 @@ public class OpenApiConfiguration {
                             .authorizationUrl(authorizationUrl)
                             .tokenUrl(tokenUrl)
                             .scopes(new Scopes()
-                                .addString("full_access", "access pets")
+                                .addString("openid", "openid")
+                                .addString(String.format("%s/%s", resourceServerIdentifier, SecurityAuthority.course_read.getItem()), "List courses")
+                                .addString(String.format("%s/%s", resourceServerIdentifier, SecurityAuthority.course_write.getItem()), "Create courses")
+                                .addString(String.format("%s/%s", resourceServerIdentifier, SecurityAuthority.subject_write.getItem()), "Create subject")
                             )
                         )))
         )

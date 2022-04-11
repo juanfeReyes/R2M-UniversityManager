@@ -1,9 +1,9 @@
 
 spring:
   datasource:
-    url: jdbc:postgresql://postgresdb:5432/uni_manager?createDatabaseIfNotExist=true
-    username: uni_manager_user
-    password: password
+    url: jdbc:postgresql://${db_host}:5432/uni_manager?createDatabaseIfNotExist=true
+    username: ${db_user}
+    password: ${db_pass}
     driver-class-name: org.postgresql.Driver
   jpa:
     generate-ddl: true
@@ -13,7 +13,23 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://keycloak:8180/auth/realms/university_manager_api_realm
+          issuer-uri: ${issuer_uri}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    oauth:
+      clientId: ${client_id}
+      clientSecret: ${client_secret}
+      usePkceWithAuthorizationCodeGrant: true
+  api-docs:
+    path: /api-docs
+  oAuthFlow:
+    authorizationUrl:  ${outh_url}/oauth2/authorize
+    tokenUrl:  ${outh_url}/oauth2/token
+    resourceServerIdentifier: university-manager-api
+
+userprovider: cognito
 
 keycloak:
   clientId: university_manager_client
@@ -21,16 +37,5 @@ keycloak:
   realm: university_manager_api_realm
   serverUrl: http://keycloak:8180/auth
 
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
-    oauth:
-      clientId: university_manager_client
-      clientSecret: bc951319-a577-4892-bec7-bf888c1ef6d7
-      usePkceWithAuthorizationCodeGrant: true
-  api-docs:
-    path: /api-docs
-  oAuthFlow:
-    authorizationUrl: http://keycloak:8180/auth/realms/university_manager_api_realm/protocol/openid-connect/auth
-    tokenUrl: http://keycloak:8180/auth/realms/university_manager_api_realm/protocol/openid-connect/token
-
+cognito:
+  poolId: ${pool_id}
