@@ -34,7 +34,6 @@ public class UpdateCourseController {
   public Course updateCourse(@PathVariable String courseId,
       @Valid @RequestBody CourseRequest courseRequestDTO){
 
-    // mapp course with id
     var response = updateCourse.execute(coursesMapper.courseRequestToCourse(courseRequestDTO, courseId));
     return response;
   }
