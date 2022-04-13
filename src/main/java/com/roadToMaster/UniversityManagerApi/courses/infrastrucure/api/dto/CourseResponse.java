@@ -7,7 +7,9 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class CourseRequest {
+public class CourseResponse {
+
+  private String id;
 
   private String name;
 

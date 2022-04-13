@@ -2,6 +2,7 @@ package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.
 
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntity;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -15,6 +16,11 @@ import javax.persistence.*;
 public class SubjectEntity {
 
   @Id
+  @GeneratedValue(generator = "UUID")
+  @GenericGenerator(
+      name = "UUID",
+      strategy = "org.hibernate.id.UUIDGenerator"
+  )
   private String id;
 
   @Column
@@ -24,8 +30,8 @@ public class SubjectEntity {
   private String description;
 
   @ManyToOne
-  @JoinColumn(name = "course_name",
-      foreignKey = @ForeignKey(name = "COURSE_NAME_FK"))
+  @JoinColumn(name = "course_id",
+      foreignKey = @ForeignKey(name = "COURSE_ID_FK"))
   private CourseEntity course;
 
   @OneToOne

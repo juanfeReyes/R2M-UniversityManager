@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface ICreateSubject {
 
-  Subject execute(String id, String name, String description, String courseName,
+  Subject execute(String name, String description, String courseName,
                   String professorId, List<Schedule> schedules);
 }

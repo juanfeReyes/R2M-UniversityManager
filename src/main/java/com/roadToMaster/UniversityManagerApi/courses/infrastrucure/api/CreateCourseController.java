@@ -2,8 +2,8 @@ package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api;
 
 import com.roadToMaster.UniversityManagerApi.courses.application.ICreateCourse;
 import com.roadToMaster.UniversityManagerApi.courses.domain.Course;
-import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CourseRequest;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CoursesMapper;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CourseRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

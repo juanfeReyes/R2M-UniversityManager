@@ -7,13 +7,14 @@ import java.util.List;
 
 public class SubjectMother {
 
-  public static Subject validSubject(User professor, List<Schedule> schedules) {
+  public static Subject validSubject(User professor, List<Schedule> schedules, Course course) {
     var faker = FakerUtil.buildFaker();
     return new Subject(
         faker.internet().uuid(),
         faker.artist().name(),
         faker.university().name(),
         schedules,
-        professor);
+        professor,
+        course);
   }
 }

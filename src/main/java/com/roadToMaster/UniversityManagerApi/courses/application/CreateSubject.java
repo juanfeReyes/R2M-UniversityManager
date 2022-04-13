@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,15 +47,17 @@ public class CreateSubject implements ICreateSubject {
   }
 
   @Transactional
-  public Subject execute(String id, String name, String description, String courseName,
+  public Subject execute(String name, String description, String courseId,
                          String professorUsername, List<Schedule> schedules) {
-    if (subjectRepository.existsById(id)) {
-      throw new ResourceAlreadyCreatedException(String.format("Subject already exists with id: %s", id));
-    }
 
-    var courseEntity = courseRepository.findByName(courseName);
+    var courseEntity = courseRepository.findById(courseId);
     if (courseEntity.isEmpty()) {
-      throw new ResourceNotFoundException(String.format("Course with name %s does not exists", courseName));
+      throw new ResourceNotFoundException(String.format("Course with id %s does not exists", courseId));
+    }
+    var course = entityMapper.courseToDomain(courseEntity.get(), Collections.emptyList());
+
+    if (subjectRepository.findByNameAndCourse(name, courseId).isPresent()) {
+      throw new ResourceAlreadyCreatedException(String.format("Subject within the course: %s and with name: %s already exists", courseId, name));
     }
 
     var user = userRepository.findByUsername(professorUsername);
@@ -71,7 +74,7 @@ public class CreateSubject implements ICreateSubject {
       throw new ScheduleConflictException("Cannot create subject schedules overlap with professors schedules", overlappedSchedules);
     }
 
-    var subject = new Subject(id, name, description, schedules, professor);
+    var subject = new Subject(null, name, description, schedules, professor, course);
     var savedSubject = subjectRepository.save(entityMapper.subjectToEntity(subject, courseEntity.get()));
     scheduleRepository.saveAll(schedules.stream().map(s -> entityMapper.scheduleToEntity(s, savedSubject)).collect(Collectors.toList()));
 

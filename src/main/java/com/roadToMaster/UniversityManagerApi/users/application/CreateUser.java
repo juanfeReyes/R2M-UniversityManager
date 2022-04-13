@@ -12,21 +12,20 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-
 public class CreateUser implements ICreateUser {
 
   private final UserEntityMapper entityMapper;
 
   private final UserRepository userRepository;
 
-  @Qualifier("${userprovider}")
   private final IUserProviderClient userProviderClient;
 
   @Autowired
-  public CreateUser(UserEntityMapper entityMapper, UserRepository userRepository, CognitoClient cognitoClient) {
+  public CreateUser(UserEntityMapper entityMapper, UserRepository userRepository,
+                    @Qualifier("cognito") IUserProviderClient userProviderClient) {
     this.entityMapper = entityMapper;
     this.userRepository = userRepository;
-    this.userProviderClient = cognitoClient;
+    this.userProviderClient = userProviderClient;
   }
 
   public User execute(User user) {

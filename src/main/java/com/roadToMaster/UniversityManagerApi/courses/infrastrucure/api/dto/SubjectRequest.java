@@ -12,9 +12,6 @@ import java.util.List;
 public class SubjectRequest {
 
   @NotEmpty
-  private String id;
-
-  @NotEmpty
   private String name;
 
   @NotEmpty
@@ -22,6 +19,9 @@ public class SubjectRequest {
 
   @NotEmpty
   private String professorUserName;
+
+  @NotEmpty
+  private String courseId;
 
   @Size(min = 1, message = "Should have at least one schedule")
   private List<ScheduleRequest> schedules;

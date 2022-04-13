@@ -64,7 +64,7 @@ public class CreateSubjectTest extends ComponentTestBase {
     var course = CourseMother.validCourse();
     var professor = UserMother.buildValid();
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
-    var expectedSubject = SubjectMother.validSubject(professor, schedules);
+    var expectedSubject = SubjectMother.validSubject(professor, schedules, course);
 
     userRepository.save(userEntityMapper.userToEntity(professor));
     courseRepository.save(entityMapper.courseToEntity(course));

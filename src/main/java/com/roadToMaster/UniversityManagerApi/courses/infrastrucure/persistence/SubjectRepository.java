@@ -6,10 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SubjectRepository extends JpaRepository<SubjectEntity, String> {
 
   @Query("select s from SubjectEntity as s where s.professor.username = :username")
   List<SubjectEntity> findByProfessorUsername(@Param("username") String username);
 
+  @Query("select s from SubjectEntity as s where s.name = :name and course.id = :courseId")
+  Optional<SubjectEntity> findByNameAndCourse(@Param("name") String name, @Param("courseId") String courseId);
 }
