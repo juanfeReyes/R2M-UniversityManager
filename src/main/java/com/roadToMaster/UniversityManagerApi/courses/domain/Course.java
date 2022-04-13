@@ -12,8 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 public class Course {
 
-  @NotNull
-  @NotEmpty(message = "Id cannot be empty")
   private String id;
 
   @NotNull

@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @Validated
-@RequestMapping("course")
-@Tag(name = "Course")
+@RequestMapping("subject")
+@Tag(name = "Subject")
 @SecurityRequirement(name = "basicAuth")
 public class CreateSubjectController {
 
@@ -33,13 +33,12 @@ public class CreateSubjectController {
   }
 
   @Operation(summary = "Create Subject", security = {@SecurityRequirement(name = "OAuthScheme")})
-  @PostMapping(value = "/{courseName}/subject", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.CREATED)
-  public void createSubject(@PathVariable String courseName,
-                            @Valid @RequestBody SubjectRequest subjectRequest) {
+  public void createSubject(@Valid @RequestBody SubjectRequest subjectRequest) {
     var schedules = subjectRequest.getSchedules().stream().map(mapper::scheduleRequestToSchedule)
         .collect(Collectors.toList());
-    createSubject.execute(subjectRequest.getId(), subjectRequest.getName(),
-        subjectRequest.getDescription(), courseName, subjectRequest.getProfessorUserName(), schedules);
+    createSubject.execute(subjectRequest.getName(),
+        subjectRequest.getDescription(), subjectRequest.getCourseId(), subjectRequest.getProfessorUserName(), schedules);
   }
 }

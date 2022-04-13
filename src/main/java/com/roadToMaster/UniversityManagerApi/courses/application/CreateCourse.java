@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import java.util.Collections;
 
 @Service
 @Validated
@@ -24,13 +25,13 @@ public class CreateCourse implements ICreateCourse {
     this.courseRepository = courseRepository;
   }
 
-  public Course execute(@Valid Course course) {
+  public Course execute(Course course) {
     if (courseRepository.findByName(course.getName()).isPresent()) {
       throw new ResourceAlreadyCreatedException(String.format("Course with name: %s already exists", course.getName()));
     }
 
-    courseRepository.save(entityMapper.courseToEntity(course));
+    var savedCourse = courseRepository.save(entityMapper.courseToEntity(course));
 
-    return course;
+    return entityMapper.courseToDomain(savedCourse, Collections.emptyList());
   }
 }

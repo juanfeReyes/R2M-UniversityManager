@@ -1,11 +1,9 @@
 package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -17,10 +15,15 @@ import java.util.Date;
 @Table(name = "course")
 public class CourseEntity {
 
-  @Column
+  @Id
+  @GeneratedValue(generator = "UUID")
+  @GenericGenerator(
+      name = "UUID",
+      strategy = "org.hibernate.id.UUIDGenerator"
+  )
   private String id;
 
-  @Id
+  @Column
   private String name;
 
   @Column

@@ -26,4 +26,6 @@ public class Subject {
 
   private User professor;
 
+  private Course course;
+
 }

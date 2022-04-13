@@ -29,7 +29,7 @@ springdoc:
     tokenUrl: http://keycloak:8180/auth/realms/university_manager_api_realm/protocol/openid-connect/token
 
 
-userprovider: keycloak
+userprovider: keycloakClient
 
 keycloak:
   clientId: university_manager_client

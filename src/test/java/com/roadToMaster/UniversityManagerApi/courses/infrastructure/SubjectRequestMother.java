@@ -9,10 +9,10 @@ public class SubjectRequestMother {
 
   public static SubjectRequest buildSubjectRequest(Subject subject) {
     return new SubjectRequest(
-        subject.getId(),
         subject.getName(),
         subject.getDescription(),
         subject.getProfessor().getUsername(),
+        subject.getCourse().getId(),
         subject.getSchedules().stream().map(ScheduleRequestMother::buildFrom).collect(Collectors.toList()));
   }
 }

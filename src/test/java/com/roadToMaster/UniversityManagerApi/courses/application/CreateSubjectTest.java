@@ -64,7 +64,7 @@ public class CreateSubjectTest {
     var course = CourseMother.validCourse();
     var professor = UserMother.buildValid();
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
-    var subject = SubjectMother.validSubject(professor, schedules);
+    var subject = SubjectMother.validSubject(professor, schedules, course);
 
     var courseEntity = entityMapper.courseToEntity(course);
 
@@ -72,7 +72,7 @@ public class CreateSubjectTest {
     when(courseRepositoryMock.findByName(ArgumentMatchers.eq(course.getName()))).thenReturn(Optional.of(courseEntity));
     when(userRepository.findByUsername(eq(professor.getUsername()))).thenReturn(Optional.of(userEntityMapper.userToEntity(professor)));
 
-    createSubject.execute(subject.getId(), subject.getName(), subject.getDescription(),
+    createSubject.execute(subject.getName(), subject.getDescription(),
         course.getName(), professor.getUsername(), schedules);
 
 
@@ -87,12 +87,12 @@ public class CreateSubjectTest {
     var course = CourseMother.validCourse();
     var professor = UserMother.buildValid();
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
-    var subject = SubjectMother.validSubject(professor, schedules);
+    var subject = SubjectMother.validSubject(professor, schedules, course);
 
     when(subjectRepository.existsById(ArgumentMatchers.eq(subject.getId()))).thenReturn(Boolean.TRUE);
 
     assertThatThrownBy(() ->
-        createSubject.execute(subject.getId(), "modernism", "moder subject",
+        createSubject.execute( "modernism", "moder subject",
             course.getName(), professor.getUsername(), schedules))
         .isInstanceOf(ResourceAlreadyCreatedException.class)
         .hasMessage(String.format("Subject already exists with id: %s", subject.getId()));
@@ -104,12 +104,12 @@ public class CreateSubjectTest {
     var course = CourseMother.validCourse();
     var professor = UserMother.buildValid();
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
-    var subject = SubjectMother.validSubject(professor, schedules);
+    var subject = SubjectMother.validSubject(professor, schedules, course);
     when(subjectRepository.existsById(ArgumentMatchers.eq(subject.getId()))).thenReturn(Boolean.FALSE);
     when(courseRepositoryMock.findByName(ArgumentMatchers.eq(course.getName()))).thenReturn(Optional.empty());
 
     assertThatThrownBy(() ->
-        createSubject.execute(subject.getId(), "modernism", "moder subject",
+        createSubject.execute("modernism", "moder subject",
             course.getName(), professor.getUsername(), schedules))
         .isInstanceOf(ResourceNotFoundException.class)
         .hasMessage(String.format("Course with name %s does not exists", course.getName()));
@@ -121,10 +121,10 @@ public class CreateSubjectTest {
     var course = CourseMother.validCourse();
     var professor = UserMother.buildValid();
     var overlappedSchedules = List.of(ScheduleMother.buildSchedule(5, 5));
-    var existingSubject = SubjectMother.validSubject(professor, overlappedSchedules);
+    var existingSubject = SubjectMother.validSubject(professor, overlappedSchedules, course);
 
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
-    var subject = SubjectMother.validSubject(professor, schedules);
+    var subject = SubjectMother.validSubject(professor, schedules, course);
     var courseEntity = entityMapper.courseToEntity(course);
 
     var existingSubjectEntity = entityMapper.subjectToEntity(existingSubject, courseEntity);
@@ -135,7 +135,7 @@ public class CreateSubjectTest {
     when(userRepository.findByUsername(eq(professor.getUsername()))).thenReturn(Optional.of(userEntityMapper.userToEntity(professor)));
 
     assertThatThrownBy(() ->
-        createSubject.execute(subject.getId(), "modernism", "moder subject",
+        createSubject.execute("modernism", "moder subject",
             course.getName(), professor.getUsername(), schedules))
         .isInstanceOf(ScheduleConflictException.class)
         .hasMessage("Cannot create subject schedules overlap with professors schedules");
