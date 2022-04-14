@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "subject")
@@ -37,4 +38,7 @@ public class SubjectEntity {
   @OneToOne
   @JoinColumn(name = "professor")
   private UserEntity professor;
+
+  @OneToMany(mappedBy = "subject")
+  private List<ScheduleEntity> schedules;
 }
