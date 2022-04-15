@@ -28,7 +28,6 @@ public class GetCourses implements IGetCourses {
 
     var courses = courseRepository.findAll(pageable);
 
-    //TODO: get subjects
     return courses.map(c -> entityMapper.courseToDomain(c, List.of()));
   }
 }
