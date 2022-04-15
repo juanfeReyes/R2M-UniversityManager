@@ -39,6 +39,6 @@ public class SubjectEntity {
   @JoinColumn(name = "professor")
   private UserEntity professor;
 
-  @OneToMany(mappedBy = "subject")
+  @OneToMany(mappedBy = "subject", cascade = CascadeType.REMOVE)
   private List<ScheduleEntity> schedules;
 }
