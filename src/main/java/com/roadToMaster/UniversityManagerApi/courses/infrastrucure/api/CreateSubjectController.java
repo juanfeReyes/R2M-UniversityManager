@@ -3,6 +3,7 @@ package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api;
 import com.roadToMaster.UniversityManagerApi.courses.application.ICreateSubject;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CoursesMapper;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.SubjectRequest;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.SubjectResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,10 +36,12 @@ public class CreateSubjectController {
   @Operation(summary = "Create Subject", security = {@SecurityRequirement(name = "OAuthScheme")})
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.CREATED)
-  public void createSubject(@Valid @RequestBody SubjectRequest subjectRequest) {
+  public SubjectResponse createSubject(@Valid @RequestBody SubjectRequest subjectRequest) {
     var schedules = subjectRequest.getSchedules().stream().map(mapper::scheduleRequestToSchedule)
         .collect(Collectors.toList());
-    createSubject.execute(subjectRequest.getName(),
+    var createdSubject = createSubject.execute(subjectRequest.getName(),
         subjectRequest.getDescription(), subjectRequest.getCourseId(), subjectRequest.getProfessorUserName(), schedules);
+
+    return mapper.subjectToResponse(createdSubject);
   }
 }

@@ -1,9 +1,9 @@
 package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api;
 
 import com.roadToMaster.UniversityManagerApi.courses.application.ICreateCourse;
-import com.roadToMaster.UniversityManagerApi.courses.domain.Course;
-import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CoursesMapper;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CourseRequest;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CourseResponse;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CoursesMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,8 +33,9 @@ public class CreateCourseController {
   @Operation(summary = "Create Course", security = {@SecurityRequirement(name = "OAuthScheme")})
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.CREATED)
-  public Course createCourse(@Valid @RequestBody CourseRequest courseRequestDTO) throws Exception {
+  public CourseResponse createCourse(@Valid @RequestBody CourseRequest courseRequestDTO) throws Exception {
     var courses = mapper.courseRequestToCourse(courseRequestDTO);
-    return createCourse.execute(courses);
+    var createdCourse = createCourse.execute(courses);
+    return mapper.courseToResponse(createdCourse);
   }
 }

@@ -5,13 +5,13 @@ public enum SecurityAuthority {
   course_write("course.write"),
   subject_write("subject.write");
 
-  private String item;
+  private final String item;
 
-  SecurityAuthority(String item){
+  SecurityAuthority(String item) {
     this.item = item;
   }
 
-  public String getItem(){
+  public String getItem() {
     return this.item;
   }
 }

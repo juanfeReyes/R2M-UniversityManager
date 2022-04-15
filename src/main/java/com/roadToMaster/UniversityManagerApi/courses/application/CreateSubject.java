@@ -76,9 +76,10 @@ public class CreateSubject implements ICreateSubject {
 
     var subject = new Subject(null, name, description, schedules, professor, course);
     var savedSubject = subjectRepository.save(entityMapper.subjectToEntity(subject, courseEntity.get()));
-    scheduleRepository.saveAll(schedules.stream().map(s -> entityMapper.scheduleToEntity(s, savedSubject)).collect(Collectors.toList()));
+    var savedSchedules = scheduleRepository.saveAll(schedules.stream().map(s -> entityMapper.scheduleToEntity(s, savedSubject)).collect(Collectors.toList()));
+    savedSubject.setSchedules(savedSchedules);
 
-    return subject;
+    return entityMapper.subjectToDomain(savedSubject, savedSchedules.stream().map(entityMapper::scheduleToDomain).collect(Collectors.toList()));
   }
 
   private List<Schedule> getProfessorSchedules(User professor) {

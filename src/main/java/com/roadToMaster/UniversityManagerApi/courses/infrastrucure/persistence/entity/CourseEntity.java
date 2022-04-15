@@ -1,7 +1,9 @@
 package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity;
 
+import com.roadToMaster.UniversityManagerApi.shared.infrastructure.persistence.AuditMetadata;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,7 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "course")
-public class CourseEntity {
+public class CourseEntity extends AuditMetadata {
 
   @Id
   @GeneratedValue(generator = "UUID")
@@ -23,15 +25,16 @@ public class CourseEntity {
   )
   private String id;
 
-  @Column
+  @Column(nullable = false)
   private String name;
 
-  @Column
+  @Column(nullable = false)
   private Date startDate;
 
-  @Column
+  @Column(nullable = false)
   private Date endDate;
 
-  @Column
+  @Column(nullable = false)
+  @Type(type = "org.hibernate.type.NumericBooleanType")
   private boolean active;
 }

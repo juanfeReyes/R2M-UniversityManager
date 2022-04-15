@@ -1,5 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity;
 
+import com.roadToMaster.UniversityManagerApi.shared.infrastructure.persistence.AuditMetadata;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -13,7 +14,7 @@ import java.time.LocalTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ScheduleEntity {
+public class ScheduleEntity extends AuditMetadata {
 
   @Id
   @GeneratedValue(generator = "UUID")
@@ -23,13 +24,13 @@ public class ScheduleEntity {
   )
   private String id;
 
-  @Column
+  @Column(nullable = false)
   private String dayOfWeek;
 
-  @Column
+  @Column(nullable = false)
   private LocalTime startDate;
 
-  @Column
+  @Column(nullable = false)
   private LocalTime endDate;
 
   @Column

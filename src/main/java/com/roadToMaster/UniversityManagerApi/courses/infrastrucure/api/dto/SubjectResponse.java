@@ -16,7 +16,7 @@ public class SubjectResponse {
 
   private String description;
 
-  private String professorId;
+  private String professorUsername;
 
   private String courseId;
 

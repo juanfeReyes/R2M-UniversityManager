@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GetUsers implements IGetUsers{
+public class GetUsers implements IGetUsers {
 
   private final UserRepository userRepository;
 

@@ -15,16 +15,16 @@ public class CognitoClient implements IUserProviderClient {
   @Value("${cognito.poolId}")
   private String userPoolId;
 
-  public String registerUser(User user){
+  public String registerUser(User user) {
     CognitoIdentityProviderClient cognitoClient = CognitoIdentityProviderClient.builder()
         .region(Region.US_EAST_1)
         .build();
-    var username =  saveUser(cognitoClient, user);
+    var username = saveUser(cognitoClient, user);
     cognitoClient.close();
-    return  username;
+    return username;
   }
 
-  private String saveUser(CognitoIdentityProviderClient cognitoClient, User user){
+  private String saveUser(CognitoIdentityProviderClient cognitoClient, User user) {
 
     AttributeType userAttrs = AttributeType.builder()
         .name("email")
@@ -41,7 +41,7 @@ public class CognitoClient implements IUserProviderClient {
 
     AdminCreateUserResponse userResponse = cognitoClient.adminCreateUser(userRequest);
 
-    if(user.getRole().value.equals(RoleEnum.ADMIN.value)) {
+    if (user.getRole().value.equals(RoleEnum.ADMIN.value)) {
       AdminAddUserToGroupRequest groupRequest = AdminAddUserToGroupRequest.builder()
           .userPoolId(userPoolId)
           .username(userResponse.user().username())

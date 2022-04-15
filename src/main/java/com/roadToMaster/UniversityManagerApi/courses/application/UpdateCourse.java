@@ -7,7 +7,7 @@ import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceNo
 import org.springframework.stereotype.Service;
 
 @Service
-public class UpdateCourse implements IUpdateCourse{
+public class UpdateCourse implements IUpdateCourse {
 
   private final CourseRepository courseRepository;
 
@@ -21,7 +21,7 @@ public class UpdateCourse implements IUpdateCourse{
   public Course execute(Course course) {
 
     //Validate course already exists then throw exception
-    if(courseRepository.findById(course.getId()).isEmpty()){
+    if (courseRepository.findById(course.getId()).isEmpty()) {
       throw new ResourceNotFoundException("Course does not exists");
     }
 

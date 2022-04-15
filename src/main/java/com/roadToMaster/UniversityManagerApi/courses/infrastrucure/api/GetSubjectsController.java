@@ -38,7 +38,7 @@ public class GetSubjectsController {
   @Operation(summary = "Get subjects", security = {@SecurityRequirement(name = "OAuthScheme")})
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public PageResponse<SubjectResponse> getSubjects(@RequestParam @Min(value = 0, message = "page number must be more at least 0") int pageNumber,
-                                                   @RequestParam @Min(value = 1, message = "page size must be more at least 1") int pageSize){
+                                                   @RequestParam @Min(value = 1, message = "page size must be more at least 1") int pageSize) {
     var page = PageRequest.of(pageNumber, pageSize);
     var subjectsPage = getSubjects.execute(page);
     return new PageResponse(subjectsPage.getTotalElements(), subjectsPage.getNumber(), subjectsPage.map(coursesMapper::subjectToResponse).getContent());

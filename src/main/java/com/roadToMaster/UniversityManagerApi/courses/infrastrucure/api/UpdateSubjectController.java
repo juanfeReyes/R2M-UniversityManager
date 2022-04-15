@@ -32,10 +32,10 @@ public class UpdateSubjectController {
   }
 
   @Operation(summary = "Update a subject", security = {@SecurityRequirement(name = "OAuthScheme")})
-  @PutMapping(value = "/{subjectId}",produces = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(value = "/{subjectId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.OK)
   public SubjectResponse updateSubject(@PathVariable String subjectId,
-          @Valid @RequestBody SubjectRequest subjectRequest){
+                                       @Valid @RequestBody SubjectRequest subjectRequest) {
     var schedules = subjectRequest.getSchedules().stream().map(coursesMapper::scheduleRequestToSchedule)
         .collect(Collectors.toList());
     var updatedSubject = updateSubject.execute(subjectId, subjectRequest.getName(), subjectRequest.getDescription(),
