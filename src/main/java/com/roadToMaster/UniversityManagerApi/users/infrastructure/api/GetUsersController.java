@@ -1,6 +1,5 @@
 package com.roadToMaster.UniversityManagerApi.users.infrastructure.api;
 
-import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CourseResponse;
 import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.dto.PageResponse;
 import com.roadToMaster.UniversityManagerApi.users.application.IGetUsers;
 import com.roadToMaster.UniversityManagerApi.users.domain.User;

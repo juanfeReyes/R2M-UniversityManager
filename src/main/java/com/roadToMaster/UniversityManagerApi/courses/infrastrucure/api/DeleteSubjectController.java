@@ -30,7 +30,7 @@ public class DeleteSubjectController {
 
   @Operation(summary = "Delete subject by Id", security = {@SecurityRequirement(name = "OAuthScheme")})
   @DeleteMapping(value = "/{subjectId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public void deleteCourse(@NotBlank(message = "Id should not be empty") @PathVariable String subjectId){
+  public void deleteCourse(@NotBlank(message = "Id should not be empty") @PathVariable String subjectId) {
     deleteSubject.execute(subjectId);
   }
 }

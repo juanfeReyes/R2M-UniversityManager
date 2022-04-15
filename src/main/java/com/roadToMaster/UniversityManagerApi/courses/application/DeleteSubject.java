@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 @Service
-public class DeleteSubject implements IDeleteSubject{
+public class DeleteSubject implements IDeleteSubject {
 
   private final SubjectRepository subjectRepository;
 
@@ -20,7 +20,7 @@ public class DeleteSubject implements IDeleteSubject{
   @Transactional
   public void execute(String subjectId) {
 
-    if(!subjectRepository.existsById(subjectId)){
+    if (!subjectRepository.existsById(subjectId)) {
       throw new ResourceNotFoundException(String.format("Subject with id: %s does not exists", subjectId));
     }
 

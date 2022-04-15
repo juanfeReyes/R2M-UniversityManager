@@ -1,8 +1,10 @@
 package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity;
 
+import com.roadToMaster.UniversityManagerApi.shared.infrastructure.persistence.AuditMetadata;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntity;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubjectEntity {
+public class SubjectEntity extends AuditMetadata {
 
   @Id
   @GeneratedValue(generator = "UUID")
@@ -24,7 +26,7 @@ public class SubjectEntity {
   )
   private String id;
 
-  @Column
+  @Column(nullable = false)
   private String name;
 
   @Column
@@ -41,4 +43,8 @@ public class SubjectEntity {
 
   @OneToMany(mappedBy = "subject", cascade = CascadeType.REMOVE)
   private List<ScheduleEntity> schedules;
+
+  @Column(nullable = false)
+  @Type(type = "org.hibernate.type.NumericBooleanType")
+  private boolean active;
 }

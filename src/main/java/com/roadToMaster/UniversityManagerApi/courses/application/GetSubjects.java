@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.stream.Collectors;
 
 @Service
-public class GetSubjects implements IGetSubjects{
+public class GetSubjects implements IGetSubjects {
 
   private final SubjectRepository subjectRepository;
 

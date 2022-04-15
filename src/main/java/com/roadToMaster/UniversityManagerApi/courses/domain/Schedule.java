@@ -24,6 +24,14 @@ public class Schedule {
 
   private String description;
 
+  public static List<Schedule> computeOverlappedSchedules(List<Schedule> newSchedules, List<Schedule> oldSchedules) {
+    return newSchedules.stream()
+        .filter(schedule -> !oldSchedules.stream()
+            .filter(oldSchedule -> oldSchedule.isScheduleOverlapped(schedule))
+            .collect(Collectors.toList()).isEmpty())
+        .collect(Collectors.toList());
+  }
+
   public boolean isScheduleOverlapped(Schedule newSchedule) {
     if (!this.day.equals(newSchedule.day)) {
       return false;
@@ -35,13 +43,5 @@ public class Schedule {
 
     return (startHours.equals(newStartHours) || startHours.isAfter(newStartHours) && startHours.isBefore(newEndHours)) ||
         (endHours.isAfter(newStartHours) && endHours.isBefore(newEndHours) || endHours.equals(newEndHours));
-  }
-
-  public static List<Schedule> computeOverlappedSchedules(List<Schedule> newSchedules, List<Schedule> oldSchedules) {
-    return newSchedules.stream()
-        .filter(schedule -> !oldSchedules.stream()
-            .filter(oldSchedule -> oldSchedule.isScheduleOverlapped(schedule))
-            .collect(Collectors.toList()).isEmpty())
-        .collect(Collectors.toList());
   }
 }

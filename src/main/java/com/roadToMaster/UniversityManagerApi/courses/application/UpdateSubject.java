@@ -8,7 +8,6 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.S
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.SubjectEntity;
-import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceAlreadyCreatedException;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceNotFoundException;
 import com.roadToMaster.UniversityManagerApi.users.domain.User;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
@@ -22,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UpdateSubject implements IUpdateSubject{
+public class UpdateSubject implements IUpdateSubject {
 
   private final ScheduleRepository scheduleRepository;
 
@@ -65,7 +64,7 @@ public class UpdateSubject implements IUpdateSubject{
     scheduleRepository.deleteBySubjectId(id);
     var professor = userEntityMapper.userToDomain(user.get());
     var professorSchedules = getProfessorSchedules(professor);
-    
+
     var overlappedSchedules = Schedule.computeOverlappedSchedules(schedules, professorSchedules);
 
     if (!overlappedSchedules.isEmpty()) {

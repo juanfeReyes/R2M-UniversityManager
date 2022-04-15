@@ -22,7 +22,7 @@ public interface CoursesMapper {
   @Mapping(target = "endTime", source = "endHours", dateFormat = "HH:mm")
   Schedule scheduleRequestToSchedule(ScheduleRequest request);
 
-  @Mapping(target = "professorId", source = "professor.id")
+  @Mapping(target = "professorUsername", source = "professor.username")
   @Mapping(target = "courseId", source = "course.id")
   @Mapping(target = "schedules", source = "schedules")
   SubjectResponse subjectToResponse(Subject subject);

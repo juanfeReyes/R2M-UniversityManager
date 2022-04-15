@@ -1,7 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api;
 
 import com.roadToMaster.UniversityManagerApi.courses.application.IGetCourses;
-import com.roadToMaster.UniversityManagerApi.courses.domain.Course;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CourseResponse;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CoursesMapper;
 import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.dto.PageResponse;
@@ -39,7 +38,7 @@ public class GetCoursesController {
   @Operation(summary = "Get courses", security = {@SecurityRequirement(name = "OAuthScheme")})
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public PageResponse<CourseResponse> getCourses(@RequestParam @Min(value = 0, message = "page number must be more at least 0") int pageNumber,
-                                         @RequestParam @Min(value = 1, message = "page size must be more at least 1") int pageSize) {
+                                                 @RequestParam @Min(value = 1, message = "page size must be more at least 1") int pageSize) {
     var page = PageRequest.of(pageNumber, pageSize);
     var coursesPage = getCourses.execute(page).map(coursesMapper::courseToResponse);
     return new PageResponse(coursesPage.getTotalElements(), coursesPage.getNumber(), coursesPage.getContent());

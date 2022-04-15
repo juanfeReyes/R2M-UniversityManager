@@ -3,8 +3,6 @@ package com.roadToMaster.UniversityManagerApi.users.application;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceAlreadyCreatedException;
 import com.roadToMaster.UniversityManagerApi.users.domain.User;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.clients.IUserProviderClient;
-import com.roadToMaster.UniversityManagerApi.users.infrastructure.clients.cognito.CognitoClient;
-import com.roadToMaster.UniversityManagerApi.users.infrastructure.clients.keycloak.KeycloakClient;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
