@@ -5,6 +5,8 @@ import lombok.Getter;
 
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
@@ -33,5 +35,13 @@ public class Schedule {
 
     return (startHours.equals(newStartHours) || startHours.isAfter(newStartHours) && startHours.isBefore(newEndHours)) ||
         (endHours.isAfter(newStartHours) && endHours.isBefore(newEndHours) || endHours.equals(newEndHours));
+  }
+
+  public static List<Schedule> computeOverlappedSchedules(List<Schedule> newSchedules, List<Schedule> oldSchedules) {
+    return newSchedules.stream()
+        .filter(schedule -> !oldSchedules.stream()
+            .filter(oldSchedule -> oldSchedule.isScheduleOverlapped(schedule))
+            .collect(Collectors.toList()).isEmpty())
+        .collect(Collectors.toList());
   }
 }
