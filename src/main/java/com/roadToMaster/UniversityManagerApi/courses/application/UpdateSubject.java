@@ -22,7 +22,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CreateSubject implements ICreateSubject {
+public class UpdateSubject implements IUpdateSubject{
+
+  private final ScheduleRepository scheduleRepository;
+
+  private final SubjectRepository subjectRepository;
+
+  private final CourseRepository courseRepository;
 
   private final CoursesEntityMapper entityMapper;
 
@@ -30,52 +36,45 @@ public class CreateSubject implements ICreateSubject {
 
   private final UserRepository userRepository;
 
-  private final CourseRepository courseRepository;
-
-  private final SubjectRepository subjectRepository;
-
-  private final ScheduleRepository scheduleRepository;
-
   @Autowired
-  public CreateSubject(CoursesEntityMapper entityMapper, UserEntityMapper userEntityMapper, UserRepository userRepository, CourseRepository courseRepository, SubjectRepository subjectRepository, ScheduleRepository scheduleRepository) {
+  public UpdateSubject(ScheduleRepository scheduleRepository, SubjectRepository subjectRepository, CourseRepository courseRepository, CoursesEntityMapper entityMapper, UserEntityMapper userEntityMapper, UserRepository userRepository) {
+    this.scheduleRepository = scheduleRepository;
+    this.subjectRepository = subjectRepository;
+    this.courseRepository = courseRepository;
     this.entityMapper = entityMapper;
     this.userEntityMapper = userEntityMapper;
     this.userRepository = userRepository;
-    this.courseRepository = courseRepository;
-    this.subjectRepository = subjectRepository;
-    this.scheduleRepository = scheduleRepository;
   }
 
   @Transactional
-  public Subject execute(String name, String description, String courseId,
+  public Subject execute(String id, String name, String description, String courseId,
                          String professorUsername, List<Schedule> schedules) {
-
     var courseEntity = courseRepository.findById(courseId);
     if (courseEntity.isEmpty()) {
       throw new ResourceNotFoundException(String.format("Course with id %s does not exists", courseId));
     }
     var course = entityMapper.courseToDomain(courseEntity.get(), Collections.emptyList());
 
-    if (subjectRepository.findByNameAndCourse(name, courseId).isPresent()) {
-      throw new ResourceAlreadyCreatedException(String.format("Subject within the course: %s and with name: %s already exists", courseId, name));
-    }
+    //Verify name of subject is unique
 
     var user = userRepository.findByUsername(professorUsername);
     if (user.isEmpty()) {
       throw new ResourceNotFoundException(String.format("Professor with username: %s was not found", professorUsername));
     }
 
+    scheduleRepository.deleteBySubjectId(id);
     var professor = userEntityMapper.userToDomain(user.get());
     var professorSchedules = getProfessorSchedules(professor);
-
+    
     var overlappedSchedules = Schedule.computeOverlappedSchedules(schedules, professorSchedules);
 
     if (!overlappedSchedules.isEmpty()) {
       throw new ScheduleConflictException("Cannot create subject schedules overlap with professors schedules", overlappedSchedules);
     }
 
-    var subject = new Subject(null, name, description, schedules, professor, course);
+    var subject = new Subject(id, name, description, schedules, professor, course);
     var savedSubject = subjectRepository.save(entityMapper.subjectToEntity(subject, courseEntity.get()));
+    scheduleRepository.deleteBySubjectId(subject.getId());
     scheduleRepository.saveAll(schedules.stream().map(s -> entityMapper.scheduleToEntity(s, savedSubject)).collect(Collectors.toList()));
 
     return subject;
