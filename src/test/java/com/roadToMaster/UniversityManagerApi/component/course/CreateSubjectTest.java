@@ -21,6 +21,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
 import javax.persistence.EntityManager;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CreateSubjectTest extends ComponentTestBase {
 
-  private static final String SUBJECT_URL = "/course/{courseName}/subject";
+  private static final String SUBJECT_URL = "/subject";
 
   @Autowired
   private CoursesEntityMapper entityMapper;
@@ -61,7 +62,7 @@ public class CreateSubjectTest extends ComponentTestBase {
 
   @Test
   public void ShouldCreateSubject() {
-    var course = CourseMother.validCourse();
+    var course = entityMapper.courseToDomain(courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse())), Collections.emptyList());
     var professor = UserMother.buildValid();
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
     var expectedSubject = SubjectMother.validSubject(professor, schedules, course);
@@ -78,7 +79,7 @@ public class CreateSubjectTest extends ComponentTestBase {
     var savedSchedules = scheduleRepository.findBySubjectId(savedSubject.stream().map(SubjectEntity::getId).collect(Collectors.toList()));
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     assertThat(savedSubject).first().usingRecursiveComparison()
-        .ignoringFields("course", "professor", "schedules").isEqualTo(expectedSubject);
+        .ignoringFields("course", "professor", "schedules", "createdDate", "active", "updatedDate", "id").isEqualTo(expectedSubject);
     assertThat(savedSchedules.stream().map(entityMapper::scheduleToDomain).collect(Collectors.toList()))
         .usingRecursiveComparison().ignoringFields("id").isEqualTo(schedules);
   }

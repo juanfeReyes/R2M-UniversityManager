@@ -44,12 +44,15 @@ class CreateCourseTest {
   public void ShouldSaveCourse() {
     var course = CourseMother.validCourse();
     when(courseRepositoryMock.findByName(anyString())).thenReturn(Optional.empty());
+    when(courseRepositoryMock.save(any())).thenReturn(entityMapper.courseToEntity(course));
 
     var result = createCourse.execute(course);
 
     verify(courseRepositoryMock, times(1)).save(courseEntityCaptor.capture());
-    assertThat(courseEntityCaptor.getValue()).usingRecursiveComparison().isEqualTo(course);
-    assertThat(result).isEqualTo(course);
+    assertThat(courseEntityCaptor.getValue()).usingRecursiveComparison()
+        .ignoringFields("createdDate", "updatedDate")
+        .isEqualTo(course);
+    assertThat(result).usingRecursiveComparison().isEqualTo(course);
   }
 
   @Test

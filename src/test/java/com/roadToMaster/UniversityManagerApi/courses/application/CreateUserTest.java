@@ -54,7 +54,7 @@ public class CreateUserTest {
 
     var user = UserMother.buildValid();
     when(userRepositoryMock.findByUsername(anyString())).thenReturn(Optional.empty());
-    when(keycloakClient.registerUser(any())).thenReturn("userId");
+    when(cognitoClient.registerUser(any())).thenReturn("userId");
 
     createUser.execute(user);
 

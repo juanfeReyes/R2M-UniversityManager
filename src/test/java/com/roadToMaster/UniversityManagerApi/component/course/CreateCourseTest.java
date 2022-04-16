@@ -44,9 +44,9 @@ public class CreateCourseTest extends ComponentTestBase {
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     assertThat(response.getBody()).usingRecursiveComparison()
-        .ignoringFields("subjects").isEqualTo(request);
+        .ignoringFields("subjects", "id").isEqualTo(request);
     assertThat(courseStored).usingRecursiveComparison()
-        .ignoringFields("subjects")
+        .ignoringFields("subjects", "id", "createdDate", "updatedDate")
         .withEqualsForFields(dateComparator, "startDate", "endDate")
         .isEqualTo(request);
   }
