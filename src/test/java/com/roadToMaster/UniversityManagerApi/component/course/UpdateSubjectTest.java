@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CreateSubjectTest extends ComponentTestBase {
+public class UpdateSubjectTest extends ComponentTestBase {
 
-  private static final String SUBJECT_URL = "/subject";
+  private static final String SUBJECT_URL = "/subject/{subjectId}";
 
   @Autowired
   private CoursesEntityMapper entityMapper;
@@ -62,23 +62,23 @@ public class CreateSubjectTest extends ComponentTestBase {
   }
 
   @Test
-  public void ShouldCreateSubject() {
-    var course = entityMapper.courseToDomain(courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse())), Collections.emptyList());
-    var professor = UserMother.buildValid();
+  public void ShouldUpdateSubject() {
+    var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
+    var course = entityMapper.courseToDomain(courseEntity, List.of());
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));;
+    var professor = userEntityMapper.userToDomain(userEntity);
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
-    var expectedSubject = SubjectMother.validSubject(professor, schedules, course);
-
-    userRepository.save(userEntityMapper.userToEntity(professor));
-    courseRepository.save(entityMapper.courseToEntity(course));
+    var subjectEntity = subjectRepository.save(entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity));
+    var expectedSubject = entityMapper.subjectToDomain(subjectEntity, schedules);
 
     var request = SubjectRequestMother.buildSubjectRequest(expectedSubject);
 
-    var response = restTemplate.exchange(SUBJECT_URL, HttpMethod.POST, new HttpEntity<>(request),
-        Void.class, course.getName());
+    var response = restTemplate.exchange(SUBJECT_URL, HttpMethod.PUT, new HttpEntity<>(request),
+        Void.class, expectedSubject.getId());
 
     var savedSubject = subjectRepository.findByProfessorUsername(professor.getUsername());
     var savedSchedules = scheduleRepository.findBySubjectId(savedSubject.stream().map(SubjectEntity::getId).collect(Collectors.toList()));
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(savedSubject).first().usingRecursiveComparison()
         .ignoringFields("course", "professor", "schedules", "createdDate", "active", "updatedDate", "id").isEqualTo(expectedSubject);
     assertThat(savedSchedules.stream().map(entityMapper::scheduleToDomain).collect(Collectors.toList()))

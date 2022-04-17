@@ -10,6 +10,7 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.S
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
 import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.ErrorResponse;
 import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.dto.PageResponse;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,8 @@ public class GetCoursesTest extends ComponentTestBase {
   @Autowired
   private CoursesEntityMapper entityMapper;
 
-  @BeforeEach
-  public void init() {
+  @AfterEach
+  public void teardown() {
     scheduleRepository.deleteAll();
     subjectRepository.deleteAll();
     courseRepository.deleteAll();

@@ -73,7 +73,6 @@ public class UpdateSubject implements IUpdateSubject {
 
     var subject = new Subject(id, name, description, schedules, professor, course);
     var savedSubject = subjectRepository.save(entityMapper.subjectToEntity(subject, courseEntity.get()));
-    scheduleRepository.deleteBySubjectId(subject.getId());
     scheduleRepository.saveAll(schedules.stream().map(s -> entityMapper.scheduleToEntity(s, savedSubject)).collect(Collectors.toList()));
 
     return subject;
