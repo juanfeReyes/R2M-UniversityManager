@@ -5,6 +5,7 @@ import com.roadToMaster.UniversityManagerApi.users.domain.User;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.clients.IUserProviderClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
@@ -18,6 +19,7 @@ public class CognitoClient implements IUserProviderClient {
   public String registerUser(User user) {
     CognitoIdentityProviderClient cognitoClient = CognitoIdentityProviderClient.builder()
         .region(Region.US_EAST_1)
+        .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
         .build();
     var username = saveUser(cognitoClient, user);
     cognitoClient.close();
