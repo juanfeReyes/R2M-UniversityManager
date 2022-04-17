@@ -30,6 +30,7 @@ public interface CoursesEntityMapper {
 
   // Subject
   // to domain
+  @Mapping(target = "schedules", source = "schedules")
   Subject subjectToDomain(SubjectEntity entity, List<Schedule> schedules);
 
   // to entity

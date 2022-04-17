@@ -3,12 +3,14 @@ package com.roadToMaster.UniversityManagerApi.component.course;
 import com.roadToMaster.UniversityManagerApi.component.ComponentTestBase;
 import com.roadToMaster.UniversityManagerApi.courses.domain.Course;
 import com.roadToMaster.UniversityManagerApi.courses.domain.CourseMother;
+import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CourseResponse;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.CourseRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.ScheduleRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
 import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.ErrorResponse;
 import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.dto.PageResponse;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class GetCoursesTest extends ComponentTestBase {
 
   public static final String COURSE_URL = "/course";
-  private static final ParameterizedTypeReference<PageResponse<Course>> courseResponseReference = new ParameterizedTypeReference<PageResponse<Course>>() {
+  private static final ParameterizedTypeReference<PageResponse<CourseResponse>> courseResponseReference = new ParameterizedTypeReference<>() {
   };
   @Autowired
   public CourseRepository courseRepository;
@@ -40,8 +42,8 @@ public class GetCoursesTest extends ComponentTestBase {
   @Autowired
   private CoursesEntityMapper entityMapper;
 
-  @BeforeEach
-  public void init() {
+  @AfterEach
+  public void teardown() {
     scheduleRepository.deleteAll();
     subjectRepository.deleteAll();
     courseRepository.deleteAll();
@@ -60,7 +62,7 @@ public class GetCoursesTest extends ComponentTestBase {
 
     assertThat(pageResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(pageResponse.getBody().getContent()).first()
-        .usingRecursiveComparison().isEqualTo(course);
+        .usingRecursiveComparison().ignoringFields("id").isEqualTo(course);
   }
 
   @Test

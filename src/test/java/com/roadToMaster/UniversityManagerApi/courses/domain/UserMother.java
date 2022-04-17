@@ -4,12 +4,14 @@ import com.roadToMaster.UniversityManagerApi.FakerUtil;
 import com.roadToMaster.UniversityManagerApi.users.domain.RoleEnum;
 import com.roadToMaster.UniversityManagerApi.users.domain.User;
 
+import java.util.UUID;
+
 public class UserMother {
 
   public static User buildValid() {
     var faker = FakerUtil.buildFaker();
     return new User(
-        faker.internet().uuid(),
+        UUID.randomUUID().toString(),
         faker.name().username(),
         faker.name().firstName(),
         faker.name().lastName(),

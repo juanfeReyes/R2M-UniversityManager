@@ -68,8 +68,9 @@ public class CreateSubjectTest {
 
     var courseEntity = entityMapper.courseToEntity(course);
 
-    when(subjectRepository.existsById(ArgumentMatchers.eq(subject.getId()))).thenReturn(Boolean.FALSE);
-    when(courseRepositoryMock.findByName(ArgumentMatchers.eq(course.getName()))).thenReturn(Optional.of(courseEntity));
+    when(subjectRepository.findByNameAndCourse(anyString(), anyString())).thenReturn(Optional.empty());
+    when(subjectRepository.save(any())).thenReturn(entityMapper.subjectToEntity(subject, courseEntity));
+    when(courseRepositoryMock.findById(ArgumentMatchers.eq(course.getName()))).thenReturn(Optional.of(courseEntity));
     when(userRepository.findByUsername(eq(professor.getUsername()))).thenReturn(Optional.of(userEntityMapper.userToEntity(professor)));
 
     createSubject.execute(subject.getName(), subject.getDescription(),
@@ -78,7 +79,7 @@ public class CreateSubjectTest {
 
     verify(subjectRepository, times(1)).save(subjectArgumentCaptor.capture());
     assertThat(subjectArgumentCaptor.getValue()).usingRecursiveComparison()
-        .ignoringFields("schedules", "professor", "course")
+        .ignoringFields("schedules", "professor", "course", "createdDate", "active", "updatedDate", "id")
         .isEqualTo(subject);
   }
 
@@ -89,13 +90,15 @@ public class CreateSubjectTest {
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
     var subject = SubjectMother.validSubject(professor, schedules, course);
 
-    when(subjectRepository.existsById(ArgumentMatchers.eq(subject.getId()))).thenReturn(Boolean.TRUE);
+    var courseEntity = entityMapper.courseToEntity(course);
+    when(courseRepositoryMock.findById(anyString())).thenReturn(Optional.of(courseEntity));
+    when(subjectRepository.findByNameAndCourse(anyString(), anyString())).thenReturn(Optional.of(entityMapper.subjectToEntity(subject, courseEntity)));
 
     assertThatThrownBy(() ->
         createSubject.execute( "modernism", "moder subject",
             course.getName(), professor.getUsername(), schedules))
         .isInstanceOf(ResourceAlreadyCreatedException.class)
-        .hasMessage(String.format("Subject already exists with id: %s", subject.getId()));
+        .hasMessage(String.format("Subject within the course: %s and with name: %s already exists", course.getName(), "modernism"));
     verify(subjectRepository, never()).save(subjectArgumentCaptor.capture());
   }
 
@@ -104,15 +107,12 @@ public class CreateSubjectTest {
     var course = CourseMother.validCourse();
     var professor = UserMother.buildValid();
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
-    var subject = SubjectMother.validSubject(professor, schedules, course);
-    when(subjectRepository.existsById(ArgumentMatchers.eq(subject.getId()))).thenReturn(Boolean.FALSE);
-    when(courseRepositoryMock.findByName(ArgumentMatchers.eq(course.getName()))).thenReturn(Optional.empty());
 
     assertThatThrownBy(() ->
         createSubject.execute("modernism", "moder subject",
             course.getName(), professor.getUsername(), schedules))
         .isInstanceOf(ResourceNotFoundException.class)
-        .hasMessage(String.format("Course with name %s does not exists", course.getName()));
+        .hasMessage(String.format("Course with id %s does not exists", course.getName()));
     verify(subjectRepository, never()).save(subjectArgumentCaptor.capture());
   }
 
@@ -130,13 +130,13 @@ public class CreateSubjectTest {
     var existingSubjectEntity = entityMapper.subjectToEntity(existingSubject, courseEntity);
     when(scheduleRepository.findBySubjectId(anyList())).thenReturn(overlappedSchedules.stream().map(s -> entityMapper.scheduleToEntity(s, existingSubjectEntity)).collect(Collectors.toList()));
     when(subjectRepository.findByProfessorUsername(ArgumentMatchers.eq(professor.getUsername()))).thenReturn(List.of(existingSubjectEntity));
-    when(subjectRepository.existsById(ArgumentMatchers.eq(subject.getId()))).thenReturn(Boolean.FALSE);
-    when(courseRepositoryMock.findByName(ArgumentMatchers.eq(course.getName()))).thenReturn(Optional.of(courseEntity));
+    when(subjectRepository.findByNameAndCourse(anyString(), anyString())).thenReturn(Optional.empty());
+    when(courseRepositoryMock.findById(ArgumentMatchers.eq(course.getId()))).thenReturn(Optional.of(courseEntity));
     when(userRepository.findByUsername(eq(professor.getUsername()))).thenReturn(Optional.of(userEntityMapper.userToEntity(professor)));
 
     assertThatThrownBy(() ->
         createSubject.execute("modernism", "moder subject",
-            course.getName(), professor.getUsername(), schedules))
+            course.getId(), professor.getUsername(), schedules))
         .isInstanceOf(ScheduleConflictException.class)
         .hasMessage("Cannot create subject schedules overlap with professors schedules");
     verify(subjectRepository, never()).save(subjectArgumentCaptor.capture());

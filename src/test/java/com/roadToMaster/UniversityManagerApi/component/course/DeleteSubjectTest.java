@@ -14,7 +14,6 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.e
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapper;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -22,15 +21,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
 import javax.persistence.EntityManager;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CreateSubjectTest extends ComponentTestBase {
+public class DeleteSubjectTest extends ComponentTestBase {
 
-  private static final String SUBJECT_URL = "/subject";
+  private static final String SUBJECT_URL = "/subject/{subjectId}";
 
   @Autowired
   private CoursesEntityMapper entityMapper;
@@ -62,26 +60,22 @@ public class CreateSubjectTest extends ComponentTestBase {
   }
 
   @Test
-  public void ShouldCreateSubject() {
-    var course = entityMapper.courseToDomain(courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse())), Collections.emptyList());
-    var professor = UserMother.buildValid();
+  public void ShouldDeleteSubject() {
+    var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
+    var course = entityMapper.courseToDomain(courseEntity, List.of());
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));;
+    var professor = userEntityMapper.userToDomain(userEntity);
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
-    var expectedSubject = SubjectMother.validSubject(professor, schedules, course);
+    var subjectEntity = subjectRepository.save(entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity));
+    var expectedSubject = entityMapper.subjectToDomain(subjectEntity, schedules);
 
-    userRepository.save(userEntityMapper.userToEntity(professor));
-    courseRepository.save(entityMapper.courseToEntity(course));
-
-    var request = SubjectRequestMother.buildSubjectRequest(expectedSubject);
-
-    var response = restTemplate.exchange(SUBJECT_URL, HttpMethod.POST, new HttpEntity<>(request),
-        Void.class, course.getName());
+    var response = restTemplate.exchange(SUBJECT_URL, HttpMethod.DELETE, null,
+        Void.class, expectedSubject.getId());
 
     var savedSubject = subjectRepository.findByProfessorUsername(professor.getUsername());
     var savedSchedules = scheduleRepository.findBySubjectId(savedSubject.stream().map(SubjectEntity::getId).collect(Collectors.toList()));
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-    assertThat(savedSubject).first().usingRecursiveComparison()
-        .ignoringFields("course", "professor", "schedules", "createdDate", "active", "updatedDate", "id").isEqualTo(expectedSubject);
-    assertThat(savedSchedules.stream().map(entityMapper::scheduleToDomain).collect(Collectors.toList()))
-        .usingRecursiveComparison().ignoringFields("id").isEqualTo(schedules);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(savedSubject).isEmpty();
+    assertThat(savedSchedules).isEmpty();
   }
 }

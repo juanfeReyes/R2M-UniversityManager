@@ -17,6 +17,11 @@ keycloak:
   realm: test
   serverUrl: http://keycloak:8180/auth
 
+userprovider: keycloakClient
+
+cognito:
+  poolId: test-pool-id
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
@@ -29,4 +34,5 @@ springdoc:
   oAuthFlow:
     authorizationUrl: http://keycloak:8180/auth/realms/university_manager_api_realm/protocol/openid-connect/auth
     tokenUrl: http://keycloak:8180/auth/realms/university_manager_api_realm/protocol/openid-connect/token
+    resourceServerIdentifier: university-manager-api
 
