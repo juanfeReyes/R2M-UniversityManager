@@ -1,5 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.courses.application;
 
+import com.roadToMaster.UniversityManagerApi.courses.application.interfaces.IDeleteSubject;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

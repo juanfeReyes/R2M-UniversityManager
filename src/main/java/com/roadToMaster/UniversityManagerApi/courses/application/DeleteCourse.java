@@ -1,5 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.courses.application;
 
+import com.roadToMaster.UniversityManagerApi.courses.application.interfaces.IDeleteCourse;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.CourseRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceConflictException;

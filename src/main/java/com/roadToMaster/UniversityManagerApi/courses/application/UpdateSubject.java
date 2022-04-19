@@ -1,5 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.courses.application;
 
+import com.roadToMaster.UniversityManagerApi.courses.application.interfaces.IUpdateSubject;
 import com.roadToMaster.UniversityManagerApi.courses.domain.Schedule;
 import com.roadToMaster.UniversityManagerApi.courses.domain.Subject;
 import com.roadToMaster.UniversityManagerApi.courses.domain.exceptions.ScheduleConflictException;

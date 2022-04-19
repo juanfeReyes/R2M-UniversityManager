@@ -1,5 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.courses.application;
 
+import com.roadToMaster.UniversityManagerApi.courses.application.interfaces.IGetSubjects;
 import com.roadToMaster.UniversityManagerApi.courses.domain.Subject;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;

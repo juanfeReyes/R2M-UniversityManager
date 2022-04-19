@@ -1,4 +1,4 @@
-package com.roadToMaster.UniversityManagerApi.courses.application;
+package com.roadToMaster.UniversityManagerApi.courses.application.interfaces;
 
 import com.roadToMaster.UniversityManagerApi.courses.domain.Course;
 

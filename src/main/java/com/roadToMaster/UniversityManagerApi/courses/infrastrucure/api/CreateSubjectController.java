@@ -1,6 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api;
 
-import com.roadToMaster.UniversityManagerApi.courses.application.ICreateSubject;
+import com.roadToMaster.UniversityManagerApi.courses.application.interfaces.ICreateSubject;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CoursesMapper;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.SubjectRequest;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.SubjectResponse;
