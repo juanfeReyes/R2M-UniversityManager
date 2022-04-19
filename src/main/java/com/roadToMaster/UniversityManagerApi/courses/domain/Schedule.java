@@ -33,31 +33,22 @@ public class Schedule {
     this.id = id;
     this.day = day;
     this.startTime = startTime;
-    this.endTime = endTime.minusMinutes(1);
+    this.endTime = endTime;
     this.description = description;
 
-    if(endTime.isAfter(startTime)){
+    if(endTime.isBefore(startTime)){
       throw new ResourceConflictException("Schedule end time should be after start time");
     }
   }
-  
-  public static List<Schedule> computeOverlappedSchedules(List<Schedule> newSchedules, List<Schedule> oldSchedules) {
-    var conflictedSchedules = new ArrayList<Schedule>();
 
+  public static List<Schedule> computeOverlappedSchedules(List<Schedule> newSchedules, List<Schedule> oldSchedules) {
     Map<DayEnum, List<Schedule>> schedulesByDay = Stream
         .concat(oldSchedules.stream(), newSchedules.stream())
         .collect(groupingBy(Schedule::getDay));
-    // for each day sort by start date
 
-    schedulesByDay.keySet().stream().forEach((day) -> {
-      var schedulesDay = schedulesByDay.get(day);
-      schedulesDay.sort(Comparator.comparing(s -> s.startTime));
-      for(int i = 0; i < schedulesDay.size()-1; i++){
-        if(schedulesDay.get(i).isScheduleOverlapped(schedulesDay.get(i+1))){
-          conflictedSchedules.add(schedulesDay.get(i));
-        }
-      }
-    });
+    var conflictedSchedules = schedulesByDay.keySet().stream()
+        .flatMap((day) -> getOverlappedSchedules(schedulesByDay.get(day)).stream())
+        .collect(Collectors.toList());
 
     return conflictedSchedules;
   }
@@ -67,5 +58,16 @@ public class Schedule {
     var newStartHours = newSchedule.startTime;
 
     return endHours.isAfter(newStartHours);
+  }
+
+  private static List<Schedule> getOverlappedSchedules(List<Schedule> schedulesByDay){
+    var conflictedSchedules = new ArrayList<Schedule>();
+    schedulesByDay.sort(Comparator.comparing(s -> s.startTime));
+    for(int i = 0; i < schedulesByDay.size()-1; i++){
+      if(schedulesByDay.get(i).isScheduleOverlapped(schedulesByDay.get(i+1))){
+        conflictedSchedules.add(schedulesByDay.get(i));
+      }
+    }
+    return conflictedSchedules;
   }
 }
