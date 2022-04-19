@@ -46,11 +46,9 @@ public class Schedule {
         .concat(oldSchedules.stream(), newSchedules.stream())
         .collect(groupingBy(Schedule::getDay));
 
-    var conflictedSchedules = schedulesByDay.keySet().stream()
+    return schedulesByDay.keySet().stream()
         .flatMap((day) -> getOverlappedSchedules(schedulesByDay.get(day)).stream())
         .collect(Collectors.toList());
-
-    return conflictedSchedules;
   }
 
   private boolean isScheduleOverlapped(Schedule newSchedule) {
