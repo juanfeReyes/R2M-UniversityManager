@@ -1,7 +1,9 @@
 package com.roadToMaster.UniversityManagerApi.component;
 
+import com.roadToMaster.UniversityManagerApi.users.infrastructure.clients.IUserProviderClient;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.clients.keycloak.KeycloakClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +20,7 @@ public class ComponentTestBase {
   public TestRestTemplate restTemplate;
 
   @MockBean
-  public KeycloakClient keycloakClient;
+  @Qualifier("cognito")
+  public IUserProviderClient userProviderClient;
 
 }

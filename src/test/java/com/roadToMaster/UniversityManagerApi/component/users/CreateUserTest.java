@@ -31,10 +31,6 @@ public class CreateUserTest extends ComponentTestBase {
   @Autowired
   private UserRepository userRepository;
 
-  @MockBean
-  @Qualifier("cognito")
-  private IUserProviderClient userProviderClient;
-
   @AfterEach
   public void teardown(){
     userRepository.deleteAll();

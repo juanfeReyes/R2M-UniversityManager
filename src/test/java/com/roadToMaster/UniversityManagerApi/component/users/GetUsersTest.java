@@ -39,10 +39,6 @@ public class GetUsersTest extends ComponentTestBase {
   @Autowired
   private UserEntityMapper userEntityMapper;
 
-  @MockBean
-  @Qualifier("cognito")
-  private IUserProviderClient userProviderClient;
-
   Comparator roleEnumComparator = (e, v) -> ((RoleEnum) e).value.compareTo((String) v);
 
   @AfterEach

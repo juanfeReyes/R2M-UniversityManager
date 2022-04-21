@@ -55,8 +55,6 @@ public class UpdateSubject implements IUpdateSubject {
     }
     var course = entityMapper.courseToDomain(courseEntity.get(), Collections.emptyList());
 
-    //Verify name of subject is unique
-
     var user = userRepository.findByUsername(professorUsername);
     if (user.isEmpty()) {
       throw new ResourceNotFoundException(String.format("Professor with username: %s was not found", professorUsername));

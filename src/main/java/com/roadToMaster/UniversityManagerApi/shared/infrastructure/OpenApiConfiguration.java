@@ -37,6 +37,7 @@ public class OpenApiConfiguration {
                                 .addString("openid", "openid")
                                 .addString(String.format("%s/%s", resourceServerIdentifier, SecurityAuthority.course_read.getItem()), "List courses")
                                 .addString(String.format("%s/%s", resourceServerIdentifier, SecurityAuthority.course_write.getItem()), "Create courses")
+                                .addString(String.format("%s/%s", resourceServerIdentifier, SecurityAuthority.subject_read.getItem()), "Create subject")
                                 .addString(String.format("%s/%s", resourceServerIdentifier, SecurityAuthority.subject_write.getItem()), "Create subject")
                             )
                         )))
