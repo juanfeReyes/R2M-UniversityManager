@@ -1,5 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.courses.application;
 
+import com.roadToMaster.UniversityManagerApi.courses.application.interfaces.IUpdateSubject;
 import com.roadToMaster.UniversityManagerApi.courses.domain.Schedule;
 import com.roadToMaster.UniversityManagerApi.courses.domain.Subject;
 import com.roadToMaster.UniversityManagerApi.courses.domain.exceptions.ScheduleConflictException;
@@ -53,8 +54,6 @@ public class UpdateSubject implements IUpdateSubject {
       throw new ResourceNotFoundException(String.format("Course with id %s does not exists", courseId));
     }
     var course = entityMapper.courseToDomain(courseEntity.get(), Collections.emptyList());
-
-    //Verify name of subject is unique
 
     var user = userRepository.findByUsername(professorUsername);
     if (user.isEmpty()) {

@@ -1,6 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api;
 
-import com.roadToMaster.UniversityManagerApi.courses.application.IGetCourses;
+import com.roadToMaster.UniversityManagerApi.courses.application.interfaces.IGetCourses;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CourseResponse;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CoursesMapper;
 import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.dto.PageResponse;

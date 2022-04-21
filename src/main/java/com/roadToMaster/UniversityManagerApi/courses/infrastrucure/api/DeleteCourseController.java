@@ -1,6 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api;
 
-import com.roadToMaster.UniversityManagerApi.courses.application.IDeleteCourse;
+import com.roadToMaster.UniversityManagerApi.courses.application.interfaces.IDeleteCourse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

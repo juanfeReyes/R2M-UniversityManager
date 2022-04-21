@@ -67,7 +67,7 @@ public class GetSubjectTest extends ComponentTestBase {
   public void ShouldGetSubjects() {
     var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
     var course = entityMapper.courseToDomain(courseEntity, List.of());
-    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));;
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));
     var professor = userEntityMapper.userToDomain(userEntity);
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
     var subjectEntity = subjectRepository.save(entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity));

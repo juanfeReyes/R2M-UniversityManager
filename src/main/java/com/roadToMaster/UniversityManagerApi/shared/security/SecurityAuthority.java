@@ -3,7 +3,8 @@ package com.roadToMaster.UniversityManagerApi.shared.security;
 public enum SecurityAuthority {
   course_read("course.read"),
   course_write("course.write"),
-  subject_write("subject.write");
+  subject_write("subject.write"),
+  subject_read("subject.read");
 
   private final String item;
 
