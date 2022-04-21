@@ -1,7 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.component;
 
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.clients.IUserProviderClient;
-import com.roadToMaster.UniversityManagerApi.users.infrastructure.clients.keycloak.KeycloakClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

@@ -14,7 +14,6 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.e
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapper;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;

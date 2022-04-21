@@ -1,7 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.component.course;
 
 import com.roadToMaster.UniversityManagerApi.component.ComponentTestBase;
-import com.roadToMaster.UniversityManagerApi.courses.domain.Course;
 import com.roadToMaster.UniversityManagerApi.courses.domain.CourseMother;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.CourseResponse;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.CourseRepository;
@@ -11,7 +10,6 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.e
 import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.ErrorResponse;
 import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.dto.PageResponse;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;

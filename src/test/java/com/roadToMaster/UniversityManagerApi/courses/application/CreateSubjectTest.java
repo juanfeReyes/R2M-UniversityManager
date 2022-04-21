@@ -95,7 +95,7 @@ public class CreateSubjectTest {
     when(subjectRepository.findByNameAndCourse(anyString(), anyString())).thenReturn(Optional.of(entityMapper.subjectToEntity(subject, courseEntity)));
 
     assertThatThrownBy(() ->
-        createSubject.execute( "modernism", "moder subject",
+        createSubject.execute("modernism", "moder subject",
             course.getName(), professor.getUsername(), schedules))
         .isInstanceOf(ResourceAlreadyCreatedException.class)
         .hasMessage(String.format("Subject within the course: %s and with name: %s already exists", course.getName(), "modernism"));

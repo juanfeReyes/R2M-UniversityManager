@@ -5,7 +5,7 @@ import com.roadToMaster.UniversityManagerApi.users.infrastructure.api.dto.UserRe
 
 public class UserRequestMother {
 
-  public static UserRequest buildRandom(){
+  public static UserRequest buildRandom() {
     var request = new UserRequest();
     request.setUsername("auto-user");
     request.setEmail("auto@email.com");

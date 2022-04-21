@@ -5,7 +5,6 @@ import com.roadToMaster.UniversityManagerApi.courses.domain.CourseMother;
 import com.roadToMaster.UniversityManagerApi.courses.domain.ScheduleMother;
 import com.roadToMaster.UniversityManagerApi.courses.domain.SubjectMother;
 import com.roadToMaster.UniversityManagerApi.courses.domain.UserMother;
-import com.roadToMaster.UniversityManagerApi.courses.infrastructure.SubjectRequestMother;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.CourseRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.ScheduleRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
@@ -16,7 +15,6 @@ import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.en
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
@@ -63,7 +61,7 @@ public class DeleteSubjectTest extends ComponentTestBase {
   public void ShouldDeleteSubject() {
     var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
     var course = entityMapper.courseToDomain(courseEntity, List.of());
-    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));;
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));
     var professor = userEntityMapper.userToDomain(userEntity);
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
     var subjectEntity = subjectRepository.save(entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity));

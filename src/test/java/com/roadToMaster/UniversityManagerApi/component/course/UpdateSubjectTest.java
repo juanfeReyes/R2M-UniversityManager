@@ -15,7 +15,6 @@ import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.ErrorResp
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapper;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -23,7 +22,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
 import javax.persistence.EntityManager;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,7 +64,7 @@ public class UpdateSubjectTest extends ComponentTestBase {
   public void ShouldUpdateSubject() {
     var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
     var course = entityMapper.courseToDomain(courseEntity, List.of());
-    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));;
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));
     var professor = userEntityMapper.userToDomain(userEntity);
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
     var subjectEntity = subjectRepository.save(entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity));
@@ -90,7 +88,7 @@ public class UpdateSubjectTest extends ComponentTestBase {
   public void ShouldReturnNotFoundWhenCourseDoesNotExists() {
     var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
     var course = entityMapper.courseToDomain(courseEntity, List.of());
-    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));;
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));
     var professor = userEntityMapper.userToDomain(userEntity);
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
     var subjectEntity = subjectRepository.save(entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity));
@@ -101,15 +99,15 @@ public class UpdateSubjectTest extends ComponentTestBase {
     var response = restTemplate.exchange(SUBJECT_URL, HttpMethod.PUT, new HttpEntity<>(request),
         ErrorResponse.class, expectedSubject.getId());
 
-   assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-   assertThat(response.getBody().getMessage()).isEqualTo(String.format("Course with id %s does not exists", request.getCourseId()));
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    assertThat(response.getBody().getMessage()).isEqualTo(String.format("Course with id %s does not exists", request.getCourseId()));
   }
 
   @Test
   public void ShouldReturnNotFoundWhenProfessorDoesNotExists() {
     var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
     var course = entityMapper.courseToDomain(courseEntity, List.of());
-    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));;
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));
     var professor = userEntityMapper.userToDomain(userEntity);
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
     var subjectEntity = subjectRepository.save(entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity));
