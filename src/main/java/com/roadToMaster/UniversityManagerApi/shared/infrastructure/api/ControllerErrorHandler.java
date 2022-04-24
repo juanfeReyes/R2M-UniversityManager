@@ -2,6 +2,7 @@ package com.roadToMaster.UniversityManagerApi.shared.infrastructure.api;
 
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceConflictException;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,22 +12,26 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
+@Slf4j
 public class ControllerErrorHandler extends ResponseEntityExceptionHandler {
 
   @ResponseBody
   @ExceptionHandler(value = {ResourceConflictException.class})
   public ResponseEntity<ErrorResponse> handleResourceConflictException(ResourceConflictException exception) {
     var errorMessage = new ErrorResponse(exception.getMessage());
-    return new ResponseEntity<ErrorResponse>(errorMessage, HttpStatus.CONFLICT);
+    log.error(errorMessage.getMessage());
+    return new ResponseEntity(errorMessage, HttpStatus.CONFLICT);
   }
 
   @ResponseBody
   @ExceptionHandler(value = {ResourceNotFoundException.class})
   public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException exception) {
     var errorMessage = new ErrorResponse(exception.getMessage());
-    return new ResponseEntity<ErrorResponse>(errorMessage, HttpStatus.NOT_FOUND);
+    log.error(errorMessage.getMessage());
+    return new ResponseEntity(errorMessage, HttpStatus.NOT_FOUND);
   }
 
   @ResponseBody
@@ -37,6 +42,15 @@ public class ControllerErrorHandler extends ResponseEntityExceptionHandler {
       errors.add(error.getMessage());
     }
     var errorMessage = new ErrorResponse("Bad request the following fields have errors", errors);
-    return new ResponseEntity<ErrorResponse>(errorMessage, HttpStatus.BAD_REQUEST);
+    log.error("Exception: {}: {}",errorMessage.getMessage(), String.join(",", errorMessage.getFieldsError()));
+    return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
+  }
+
+  @ResponseBody
+  @ExceptionHandler(value = {Exception.class})
+  public ResponseEntity<ErrorResponse> handleResourceNotFoundException(Exception exception) {
+    log.error("Unhandled exception: {}", exception.getMessage());
+    var errorMessage = new ErrorResponse("Internal server error. Request was not processed");
+    return new ResponseEntity(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }

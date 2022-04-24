@@ -1,6 +1,7 @@
 package com.roadToMaster.UniversityManagerApi.users.application;
 
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceAlreadyCreatedException;
+import com.roadToMaster.UniversityManagerApi.users.application.interfaces.ICreateUser;
 import com.roadToMaster.UniversityManagerApi.users.domain.User;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.clients.IUserProviderClient;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
@@ -35,9 +36,9 @@ public class CreateUser implements ICreateUser {
     userProviderClient.registerUser(user);
 
     //Save user in BD
-    userRepository.save(entityMapper.userToEntity(user));
+    var savedUser = userRepository.save(entityMapper.userToEntity(user));
 
     //return user
-    return user;
+    return entityMapper.userToDomain(savedUser);
   }
 }

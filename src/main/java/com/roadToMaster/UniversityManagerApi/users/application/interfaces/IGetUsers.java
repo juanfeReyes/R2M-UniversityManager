@@ -1,4 +1,4 @@
-package com.roadToMaster.UniversityManagerApi.users.application;
+package com.roadToMaster.UniversityManagerApi.users.application.interfaces;
 
 import com.roadToMaster.UniversityManagerApi.users.domain.User;
 import org.springframework.data.domain.Page;
