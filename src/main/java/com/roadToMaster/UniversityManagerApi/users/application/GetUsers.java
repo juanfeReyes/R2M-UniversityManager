@@ -1,5 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.users.application;
 
+import com.roadToMaster.UniversityManagerApi.users.application.interfaces.IGetUsers;
 import com.roadToMaster.UniversityManagerApi.users.domain.User;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapper;

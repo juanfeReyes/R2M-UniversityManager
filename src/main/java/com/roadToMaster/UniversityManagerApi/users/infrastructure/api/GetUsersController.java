@@ -1,7 +1,7 @@
 package com.roadToMaster.UniversityManagerApi.users.infrastructure.api;
 
 import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.dto.PageResponse;
-import com.roadToMaster.UniversityManagerApi.users.application.IGetUsers;
+import com.roadToMaster.UniversityManagerApi.users.application.interfaces.IGetUsers;
 import com.roadToMaster.UniversityManagerApi.users.domain.User;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.api.dto.UserApiMapper;
 import io.swagger.v3.oas.annotations.Operation;

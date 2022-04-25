@@ -1,6 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.users.infrastructure.api;
 
-import com.roadToMaster.UniversityManagerApi.users.application.ICreateUser;
+import com.roadToMaster.UniversityManagerApi.users.application.interfaces.ICreateUser;
 import com.roadToMaster.UniversityManagerApi.users.domain.User;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.api.dto.UserApiMapper;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.api.dto.UserRequest;
