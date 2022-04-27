@@ -8,6 +8,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "subject")
@@ -43,6 +44,9 @@ public class SubjectEntity extends AuditMetadata {
 
   @OneToMany(mappedBy = "subject", cascade = CascadeType.REMOVE)
   private List<ScheduleEntity> schedules;
+
+  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  private Set<UserEntity> students;
 
   @Column(nullable = false)
   @Type(type = "org.hibernate.type.NumericBooleanType")

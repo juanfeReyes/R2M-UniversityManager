@@ -3,7 +3,8 @@ package com.roadToMaster.UniversityManagerApi.users.domain;
 public enum RoleEnum {
   ADMIN("ADMIN"),
   DIRECTOR("DIRECTOR"),
-  PROFESSOR("PROFESSOR");
+  PROFESSOR("PROFESSOR"),
+  STUDENT("STUDENT");
 
   public final String value;
 

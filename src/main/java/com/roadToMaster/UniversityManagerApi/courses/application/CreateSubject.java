@@ -75,7 +75,7 @@ public class CreateSubject implements ICreateSubject {
       throw new ScheduleConflictException("Cannot create subject schedules overlap with professors schedules", overlappedSchedules);
     }
 
-    var subject = new Subject(null, name, description, schedules, professor, course);
+    var subject = new Subject(null, name, description, schedules, Collections.emptyList(), professor, course);
     var savedSubject = subjectRepository.save(entityMapper.subjectToEntity(subject, courseEntity.get()));
     var savedSchedules = scheduleRepository.saveAll(schedules.stream().map(s -> entityMapper.scheduleToEntity(s, savedSubject)).collect(Collectors.toList()));
     savedSubject.setSchedules(savedSchedules);

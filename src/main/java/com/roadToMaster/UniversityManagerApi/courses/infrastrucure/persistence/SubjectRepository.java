@@ -16,6 +16,9 @@ public interface SubjectRepository extends JpaRepository<SubjectEntity, String> 
   @Query("select s from SubjectEntity as s where course.id = :courseId")
   List<SubjectEntity> findAllByCourse(@Param("courseId") String courseId);
 
+  @Query("select s from SubjectEntity as s inner join s.students students where students.id in :studentId")
+  List<SubjectEntity> findAllByStudent(@Param("studentId") String courseId);
+
   @Query("select s from SubjectEntity as s where s.name = :name and course.id = :courseId")
   Optional<SubjectEntity> findByNameAndCourse(@Param("name") String name, @Param("courseId") String courseId);
 }

@@ -23,7 +23,7 @@ public class UserRequest {
   @Email
   private String email;
 
-  @Pattern(regexp = "ADMIN|DIRECTOR|PROFESSOR")
+  @Pattern(regexp = "ADMIN|DIRECTOR|PROFESSOR|STUDENT")
   private String role;
 
   private boolean active;

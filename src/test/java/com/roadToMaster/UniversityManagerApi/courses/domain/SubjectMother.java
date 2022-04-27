@@ -3,6 +3,7 @@ package com.roadToMaster.UniversityManagerApi.courses.domain;
 import com.roadToMaster.UniversityManagerApi.FakerUtil;
 import com.roadToMaster.UniversityManagerApi.users.domain.User;
 
+import java.util.Collections;
 import java.util.List;
 
 public class SubjectMother {
@@ -14,6 +15,7 @@ public class SubjectMother {
         faker.artist().name(),
         faker.university().name(),
         schedules,
+        Collections.emptyList(),
         professor,
         course);
   }
