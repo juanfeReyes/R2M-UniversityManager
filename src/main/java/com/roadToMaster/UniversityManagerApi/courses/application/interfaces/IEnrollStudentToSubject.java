@@ -1,6 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.courses.application.interfaces;
 
-public interface IAssignStudentToSubject {
+public interface IEnrollStudentToSubject {
 
   boolean execute(String subjectId, String studentId);
 }

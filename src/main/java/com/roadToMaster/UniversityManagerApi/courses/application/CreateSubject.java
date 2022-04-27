@@ -37,14 +37,17 @@ public class CreateSubject implements ICreateSubject {
 
   private final ScheduleRepository scheduleRepository;
 
+  private final ComputeSchedulesCollisions computeOverlappedSchedules;
+
   @Autowired
-  public CreateSubject(CoursesEntityMapper entityMapper, UserEntityMapper userEntityMapper, UserRepository userRepository, CourseRepository courseRepository, SubjectRepository subjectRepository, ScheduleRepository scheduleRepository) {
+  public CreateSubject(CoursesEntityMapper entityMapper, UserEntityMapper userEntityMapper, UserRepository userRepository, CourseRepository courseRepository, SubjectRepository subjectRepository, ScheduleRepository scheduleRepository, ComputeSchedulesCollisions computeOverlappedSchedules) {
     this.entityMapper = entityMapper;
     this.userEntityMapper = userEntityMapper;
     this.userRepository = userRepository;
     this.courseRepository = courseRepository;
     this.subjectRepository = subjectRepository;
     this.scheduleRepository = scheduleRepository;
+    this.computeOverlappedSchedules = computeOverlappedSchedules;
   }
 
   @Transactional
@@ -66,15 +69,12 @@ public class CreateSubject implements ICreateSubject {
       throw new ResourceNotFoundException(String.format("Professor with username: %s was not found", professorUsername));
     }
 
-    var professor = userEntityMapper.userToDomain(user.get());
-    var professorSchedules = getProfessorSchedules(professor);
-
-    var overlappedSchedules = Schedule.computeOverlappedSchedules(schedules, professorSchedules);
-
+    var overlappedSchedules = computeOverlappedSchedules.execute(schedules, computeOverlappedSchedules.getProfessorSchedules(professorUsername));
     if (!overlappedSchedules.isEmpty()) {
       throw new ScheduleConflictException("Cannot create subject schedules overlap with professors schedules", overlappedSchedules);
     }
 
+    var professor = userEntityMapper.userToDomain(user.get());
     var subject = new Subject(null, name, description, schedules, Collections.emptyList(), professor, course);
     var savedSubject = subjectRepository.save(entityMapper.subjectToEntity(subject, courseEntity.get()));
     var savedSchedules = scheduleRepository.saveAll(schedules.stream().map(s -> entityMapper.scheduleToEntity(s, savedSubject)).collect(Collectors.toList()));
@@ -83,10 +83,4 @@ public class CreateSubject implements ICreateSubject {
     return entityMapper.subjectToDomain(savedSubject, savedSchedules.stream().map(entityMapper::scheduleToDomain).collect(Collectors.toList()));
   }
 
-  private List<Schedule> getProfessorSchedules(User professor) {
-    var professorSubjectsIds = subjectRepository.findByProfessorUsername(professor.getUsername())
-        .stream().map(SubjectEntity::getId).collect(Collectors.toList());
-    return scheduleRepository.findBySubjectId(professorSubjectsIds).stream()
-        .map(entityMapper::scheduleToDomain).collect(Collectors.toList());
-  }
 }

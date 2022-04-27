@@ -21,9 +21,9 @@ public class RemoveStudentFromSubjectController {
   }
 
   @Operation(summary = "remove student to subject", security = {@SecurityRequirement(name = "OAuthScheme")})
-  @DeleteMapping(value = "/{studentId}/subject/{subjectId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(HttpStatus.CREATED)
-  public void removeStudentFromSubject(@PathVariable String studentId, @PathVariable String subjectId) throws Exception {
-    removeStudentFromSubject.execute(subjectId, studentId);
+  @DeleteMapping(value = "/{username}/subject/{subjectId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.OK)
+  public void removeStudentFromSubject(@PathVariable String username, @PathVariable String subjectId) throws Exception {
+    removeStudentFromSubject.execute(subjectId, username);
   }
 }

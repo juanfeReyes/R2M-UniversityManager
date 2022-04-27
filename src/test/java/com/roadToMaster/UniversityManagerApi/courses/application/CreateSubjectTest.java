@@ -56,7 +56,8 @@ public class CreateSubjectTest {
   @BeforeEach
   public void setup() {
     Mockito.clearInvocations(courseRepositoryMock, subjectRepository);
-    createSubject = new CreateSubject(entityMapper, userEntityMapper, userRepository, courseRepositoryMock, subjectRepository, scheduleRepository);
+    createSubject = new CreateSubject(entityMapper, userEntityMapper, userRepository,
+        courseRepositoryMock, subjectRepository, scheduleRepository, new ComputeSchedulesCollisions(subjectRepository, scheduleRepository, entityMapper));
   }
 
   @Test
@@ -79,7 +80,7 @@ public class CreateSubjectTest {
 
     verify(subjectRepository, times(1)).save(subjectArgumentCaptor.capture());
     assertThat(subjectArgumentCaptor.getValue()).usingRecursiveComparison()
-        .ignoringFields("schedules", "professor", "course", "createdDate", "active", "updatedDate", "id")
+        .ignoringFields("schedules", "professor", "course", "createdDate", "active", "updatedDate", "id", "students")
         .isEqualTo(subject);
   }
 

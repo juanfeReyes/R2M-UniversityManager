@@ -79,7 +79,7 @@ public class UpdateSubjectTest extends ComponentTestBase {
     var savedSchedules = scheduleRepository.findBySubjectId(savedSubject.stream().map(SubjectEntity::getId).collect(Collectors.toList()));
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(savedSubject).first().usingRecursiveComparison()
-        .ignoringFields("course", "professor", "schedules", "createdDate", "active", "updatedDate", "id").isEqualTo(expectedSubject);
+        .ignoringFields("course", "professor", "schedules", "createdDate", "active", "updatedDate", "id", "students").isEqualTo(expectedSubject);
     assertThat(savedSchedules.stream().map(entityMapper::scheduleToDomain).collect(Collectors.toList()))
         .usingRecursiveComparison().ignoringFields("id").isEqualTo(schedules);
   }

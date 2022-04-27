@@ -2,9 +2,12 @@ package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto;
 
 import com.roadToMaster.UniversityManagerApi.courses.domain.Course;
 import com.roadToMaster.UniversityManagerApi.courses.domain.Schedule;
+import com.roadToMaster.UniversityManagerApi.courses.domain.Student;
 import com.roadToMaster.UniversityManagerApi.courses.domain.Subject;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CoursesMapper {
@@ -26,4 +29,7 @@ public interface CoursesMapper {
   @Mapping(target = "courseId", source = "course.id")
   @Mapping(target = "schedules", source = "schedules")
   SubjectResponse subjectToResponse(Subject subject);
+
+  @Mapping(target = "subjects", source = "subjectsResponse")
+  StudentResponse studentToResponse(Student student, List<SubjectResponse> subjectsResponse);
 }

@@ -1,6 +1,6 @@
 package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api;
 
-import com.roadToMaster.UniversityManagerApi.courses.application.interfaces.IAssignStudentToSubject;
+import com.roadToMaster.UniversityManagerApi.courses.application.interfaces.IEnrollStudentToSubject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,19 +13,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("student")
 @Tag(name = "Student")
 @SecurityRequirement(name = "basicAuth")
-public class AssignStudentToSubjectController {
+public class EnrollStudentToSubjectController {
 
-  private final IAssignStudentToSubject assignStudentToSubject;
+  private final IEnrollStudentToSubject assignStudentToSubject;
 
   @Autowired
-  public AssignStudentToSubjectController(IAssignStudentToSubject assignStudentToSubject) {
+  public EnrollStudentToSubjectController(IEnrollStudentToSubject assignStudentToSubject) {
     this.assignStudentToSubject = assignStudentToSubject;
   }
 
   @Operation(summary = "assign student to subject", security = {@SecurityRequirement(name = "OAuthScheme")})
-  @PutMapping(value = "/{studentId}/subject/{subjectId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(HttpStatus.CREATED)
-  public void assignStudentToSubject(@PathVariable String studentId, @PathVariable String subjectId) throws Exception {
-    assignStudentToSubject.execute(subjectId, studentId);
+  @PutMapping(value = "/{username}/subject/{subjectId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.OK)
+  public void enrollStudentToSubject(@PathVariable String username, @PathVariable String subjectId) throws Exception {
+    assignStudentToSubject.execute(subjectId, username);
   }
 }
