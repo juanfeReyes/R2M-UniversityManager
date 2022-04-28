@@ -41,6 +41,9 @@ public class GetStudent implements IGetStudent {
     }
 
     var studentProfile = userEntityMapper.userToDomain(userEntity.get());
+    if(!studentProfile.getRole().equals(RoleEnum.STUDENT)){
+      throw new ResourceConflictException("User is not a student");
+    }
     var subjectEntities = subjectRepository.findAllByStudent(studentProfile.getId());
 
     var subjects = subjectEntities.stream().map(entity -> {
