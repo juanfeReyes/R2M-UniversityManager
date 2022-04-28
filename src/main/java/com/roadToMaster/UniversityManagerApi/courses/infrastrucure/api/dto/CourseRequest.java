@@ -2,7 +2,6 @@ package com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.andreinc.jbvext.annotations.date.IsDate;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

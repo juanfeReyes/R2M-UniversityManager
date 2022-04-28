@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.andreinc.jbvext.annotations.date.IsDate;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

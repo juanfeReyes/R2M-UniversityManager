@@ -10,6 +10,7 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.C
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.ScheduleRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
+import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.ErrorResponse;
 import com.roadToMaster.UniversityManagerApi.users.domain.RoleEnum;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapper;
@@ -22,7 +23,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
+import java.util.UUID;
 
+import static com.roadToMaster.UniversityManagerApi.courses.application.EnrollStudentToSubject.SCHEDULE_COLLISION_MSG;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RemoveStudentFromSubjectTest extends ComponentTestBase {
@@ -82,5 +85,49 @@ public class RemoveStudentFromSubjectTest extends ComponentTestBase {
     var savedSubject = subjectRepository.findAllByStudent(student.getId());
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(savedSubject).isEmpty();
+  }
+
+  @Test
+  public void shouldReturnSubjectNotFoundWhenEnrollStudent() {
+    var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
+    var course = entityMapper.courseToDomain(courseEntity, List.of());
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));
+    var professor = userEntityMapper.userToDomain(userEntity);
+    var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
+    var subjectEntity = subjectRepository.save(entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity));
+    var expectedSubject = entityMapper.subjectToDomain(subjectEntity, schedules);
+
+    var studentEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValidWithRole(RoleEnum.STUDENT)));
+    var student = userEntityMapper.userToDomain(studentEntity);
+
+    var request = SubjectRequestMother.buildSubjectRequest(expectedSubject);
+
+    var response = restTemplate.exchange(ENROLL_STUDENT_URL, HttpMethod.DELETE, new HttpEntity<>(request),
+        ErrorResponse.class, student.getUsername(), UUID.randomUUID().toString());
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    assertThat(response.getBody().getMessage()).isEqualTo("Subject does not exists");
+  }
+
+  @Test
+  public void shouldReturnStudentNotFoundWhenEnrollStudent() {
+    var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
+    var course = entityMapper.courseToDomain(courseEntity, List.of());
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));
+    var professor = userEntityMapper.userToDomain(userEntity);
+    var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
+    var subjectEntity = subjectRepository.save(entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity));
+    var expectedSubject = entityMapper.subjectToDomain(subjectEntity, schedules);
+
+    var studentEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValidWithRole(RoleEnum.STUDENT)));
+    userEntityMapper.userToDomain(studentEntity);
+
+    var request = SubjectRequestMother.buildSubjectRequest(expectedSubject);
+
+    var response = restTemplate.exchange(ENROLL_STUDENT_URL, HttpMethod.DELETE, new HttpEntity<>(request),
+        ErrorResponse.class, "not-exists", expectedSubject.getId());
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    assertThat(response.getBody().getMessage()).isEqualTo("Student does not exists");
   }
 }

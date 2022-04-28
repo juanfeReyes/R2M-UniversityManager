@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 @Service
 public class UpdateSubject implements IUpdateSubject {
 
+  public static final String STUDENT_CONFLICT_ERROR_MSG = "There are %s student already registered, could generate schedules conflicts";
   private final ScheduleRepository scheduleRepository;
 
   private final SubjectRepository subjectRepository;
@@ -67,7 +68,7 @@ public class UpdateSubject implements IUpdateSubject {
     subjectRepository.findById(id).ifPresent(subject -> {
       var studentsCount = subject.getStudents().size();
       if(subject.getStudents().size() > 0){
-        throw new ResourceConflictException(String.format("There are %s student already registered, could generate schedules conflicts", studentsCount));
+        throw new ResourceConflictException(String.format(STUDENT_CONFLICT_ERROR_MSG, studentsCount));
       }
     });
 

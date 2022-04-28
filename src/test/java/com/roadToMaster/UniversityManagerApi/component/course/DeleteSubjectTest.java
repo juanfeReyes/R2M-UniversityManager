@@ -10,6 +10,7 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.S
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.SubjectEntity;
+import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.ErrorResponse;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpStatus;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -75,5 +77,21 @@ public class DeleteSubjectTest extends ComponentTestBase {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(savedSubject).isEmpty();
     assertThat(savedSchedules).isEmpty();
+  }
+
+  @Test
+  public void shouldReturnNotFoundDeleteSubject() {
+    var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
+    var course = entityMapper.courseToDomain(courseEntity, List.of());
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));
+    var professor = userEntityMapper.userToDomain(userEntity);
+    subjectRepository.save(entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity));
+
+    var notExistingSubjectId = UUID.randomUUID().toString();
+    var response = restTemplate.exchange(SUBJECT_URL, HttpMethod.DELETE, null,
+        ErrorResponse.class, notExistingSubjectId);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    assertThat(response.getBody().getMessage()).isEqualTo(String.format("Subject with id: %s does not exists", notExistingSubjectId));
   }
 }

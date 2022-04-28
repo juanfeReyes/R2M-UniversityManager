@@ -69,6 +69,6 @@ public class CreateCourseTest extends ComponentTestBase {
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     assertThat(response.getBody().getMessage()).isEqualTo("Bad request the following fields have errors");
-    assertThat(response.getBody().getFieldsError()).containsExactly("Name cannot be empty");
+    assertThat(response.getBody().getFieldsError()).containsExactly("name cannot be empty");
   }
 }

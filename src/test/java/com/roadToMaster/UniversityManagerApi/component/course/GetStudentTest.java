@@ -11,6 +11,7 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.C
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.ScheduleRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
+import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.ErrorResponse;
 import com.roadToMaster.UniversityManagerApi.users.domain.RoleEnum;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapper;
@@ -77,5 +78,25 @@ public class GetStudentTest extends ComponentTestBase {
     assertThat(response.getBody().getProfileInformation()).usingRecursiveComparison().isEqualTo(student);
     assertThat(response.getBody().getSubjects()).first()
         .usingRecursiveComparison().ignoringFields("professorUsername", "courseId").isEqualTo(actualStoredSubject);
+  }
+
+  @Test
+  public void shouldReturnNotFoundGetStudentToSubject() {
+    var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
+    var course = entityMapper.courseToDomain(courseEntity, List.of());
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));
+    var professor = userEntityMapper.userToDomain(userEntity);
+
+    var studentEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValidWithRole(RoleEnum.STUDENT)));
+    userEntityMapper.userToDomain(studentEntity);
+
+    var subjectEntity = entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity);
+    subjectEntity.getStudents().add(studentEntity);
+
+    var response = restTemplate.exchange(GET_STUDENT_URL, HttpMethod.GET, null,
+        ErrorResponse.class, "not-exists");
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    assertThat(response.getBody().getMessage()).isEqualTo("Student does not exists");
   }
 }
