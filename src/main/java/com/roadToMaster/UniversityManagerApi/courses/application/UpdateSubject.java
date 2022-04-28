@@ -8,9 +8,8 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.C
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.ScheduleRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
-import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.SubjectEntity;
+import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceConflictException;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceNotFoundException;
-import com.roadToMaster.UniversityManagerApi.users.domain.User;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,7 @@ import java.util.stream.Collectors;
 @Service
 public class UpdateSubject implements IUpdateSubject {
 
+  public static final String STUDENT_CONFLICT_ERROR_MSG = "There are %s student already registered, could generate schedules conflicts";
   private final ScheduleRepository scheduleRepository;
 
   private final SubjectRepository subjectRepository;
@@ -36,14 +36,17 @@ public class UpdateSubject implements IUpdateSubject {
 
   private final UserRepository userRepository;
 
+  private final ComputeSchedulesCollisions computeOverlappedSchedules;
+
   @Autowired
-  public UpdateSubject(ScheduleRepository scheduleRepository, SubjectRepository subjectRepository, CourseRepository courseRepository, CoursesEntityMapper entityMapper, UserEntityMapper userEntityMapper, UserRepository userRepository) {
+  public UpdateSubject(ScheduleRepository scheduleRepository, SubjectRepository subjectRepository, CourseRepository courseRepository, CoursesEntityMapper entityMapper, UserEntityMapper userEntityMapper, UserRepository userRepository, ComputeSchedulesCollisions computeOverlappedSchedules) {
     this.scheduleRepository = scheduleRepository;
     this.subjectRepository = subjectRepository;
     this.courseRepository = courseRepository;
     this.entityMapper = entityMapper;
     this.userEntityMapper = userEntityMapper;
     this.userRepository = userRepository;
+    this.computeOverlappedSchedules = computeOverlappedSchedules;
   }
 
   @Transactional
@@ -60,27 +63,24 @@ public class UpdateSubject implements IUpdateSubject {
       throw new ResourceNotFoundException(String.format("Professor with username: %s was not found", professorUsername));
     }
 
+    subjectRepository.findById(id).ifPresent(subject -> {
+      var studentsCount = subject.getStudents().size();
+      if (subject.getStudents().size() > 0) {
+        throw new ResourceConflictException(String.format(STUDENT_CONFLICT_ERROR_MSG, studentsCount));
+      }
+    });
+
     scheduleRepository.deleteBySubjectId(id);
-    var professor = userEntityMapper.userToDomain(user.get());
-    var professorSchedules = getProfessorSchedules(professor);
-
-    var overlappedSchedules = Schedule.computeOverlappedSchedules(schedules, professorSchedules);
-
+    var overlappedSchedules = computeOverlappedSchedules.execute(schedules, computeOverlappedSchedules.getProfessorSchedules(professorUsername));
     if (!overlappedSchedules.isEmpty()) {
       throw new ScheduleConflictException("Cannot create subject schedules overlap with professors schedules", overlappedSchedules);
     }
 
-    var subject = new Subject(id, name, description, schedules, professor, course);
+    var professor = userEntityMapper.userToDomain(user.get());
+    var subject = new Subject(id, name, description, schedules, Collections.emptyList(), professor, course);
     var savedSubject = subjectRepository.save(entityMapper.subjectToEntity(subject, courseEntity.get()));
     scheduleRepository.saveAll(schedules.stream().map(s -> entityMapper.scheduleToEntity(s, savedSubject)).collect(Collectors.toList()));
 
     return subject;
-  }
-
-  private List<Schedule> getProfessorSchedules(User professor) {
-    var professorSubjectsIds = subjectRepository.findByProfessorUsername(professor.getUsername())
-        .stream().map(SubjectEntity::getId).collect(Collectors.toList());
-    return scheduleRepository.findBySubjectId(professorSubjectsIds).stream()
-        .map(entityMapper::scheduleToDomain).collect(Collectors.toList());
   }
 }

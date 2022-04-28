@@ -11,6 +11,7 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.S
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.SubjectEntity;
+import com.roadToMaster.UniversityManagerApi.users.domain.RoleEnum;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -63,7 +64,7 @@ public class CreateSubjectTest extends ComponentTestBase {
   @Test
   public void ShouldCreateSubject() {
     var course = entityMapper.courseToDomain(courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse())), Collections.emptyList());
-    var professor = UserMother.buildValid();
+    var professor = UserMother.buildValidWithRole(RoleEnum.PROFESSOR);
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
     var expectedSubject = SubjectMother.validSubject(professor, schedules, course);
 
@@ -79,7 +80,7 @@ public class CreateSubjectTest extends ComponentTestBase {
     var savedSchedules = scheduleRepository.findBySubjectId(savedSubject.stream().map(SubjectEntity::getId).collect(Collectors.toList()));
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     assertThat(savedSubject).first().usingRecursiveComparison()
-        .ignoringFields("course", "professor", "schedules", "createdDate", "active", "updatedDate", "id").isEqualTo(expectedSubject);
+        .ignoringFields("course", "professor", "schedules", "createdDate", "active", "updatedDate", "id", "students").isEqualTo(expectedSubject);
     assertThat(savedSchedules.stream().map(entityMapper::scheduleToDomain).collect(Collectors.toList()))
         .usingRecursiveComparison().ignoringFields("id").isEqualTo(schedules);
   }

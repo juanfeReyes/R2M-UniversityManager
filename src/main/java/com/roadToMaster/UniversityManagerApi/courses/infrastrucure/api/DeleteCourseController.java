@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 
 @RestController
 @RequestMapping("course")
@@ -30,7 +30,7 @@ public class DeleteCourseController {
 
   @Operation(summary = "Delete course by Id", security = {@SecurityRequirement(name = "OAuthScheme")})
   @DeleteMapping(value = "/{courseId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public void deleteCourse(@NotEmpty @PathVariable String courseId) {
+  public void deleteCourse(@NotBlank(message = "courseId must not be blank") @PathVariable String courseId) {
     deleteCourse.execute(courseId);
   }
 

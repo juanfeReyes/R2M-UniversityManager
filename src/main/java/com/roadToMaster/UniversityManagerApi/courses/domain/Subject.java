@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
-//@NoArgsConstructor
 @AllArgsConstructor
 public class Subject {
 
@@ -23,6 +22,8 @@ public class Subject {
   private String description;
 
   private List<Schedule> schedules;
+
+  private List<User> students;
 
   private User professor;
 

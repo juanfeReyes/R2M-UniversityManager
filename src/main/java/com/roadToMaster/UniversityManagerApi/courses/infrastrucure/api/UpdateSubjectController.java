@@ -10,15 +10,18 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("subject")
 @Tag(name = "Subject")
 @SecurityRequirement(name = "basicAuth")
+@Validated
 public class UpdateSubjectController {
 
   private final IUpdateSubject updateSubject;
@@ -34,7 +37,7 @@ public class UpdateSubjectController {
   @Operation(summary = "Update a subject", security = {@SecurityRequirement(name = "OAuthScheme")})
   @PutMapping(value = "/{subjectId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.OK)
-  public SubjectResponse updateSubject(@PathVariable String subjectId,
+  public SubjectResponse updateSubject(@NotBlank(message = "subjectId must not be blank") @PathVariable String subjectId,
                                        @Valid @RequestBody SubjectRequest subjectRequest) {
     var schedules = subjectRequest.getSchedules().stream().map(coursesMapper::scheduleRequestToSchedule)
         .collect(Collectors.toList());

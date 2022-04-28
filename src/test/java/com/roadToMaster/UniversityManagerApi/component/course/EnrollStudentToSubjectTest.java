@@ -10,11 +10,11 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.C
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.ScheduleRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
-import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.SubjectEntity;
 import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.ErrorResponse;
 import com.roadToMaster.UniversityManagerApi.users.domain.RoleEnum;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapper;
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +22,15 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
-import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
-import static com.roadToMaster.UniversityManagerApi.courses.application.UpdateSubject.STUDENT_CONFLICT_ERROR_MSG;
+import static com.roadToMaster.UniversityManagerApi.courses.application.EnrollStudentToSubject.SCHEDULE_COLLISION_MSG;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UpdateSubjectTest extends ComponentTestBase {
+public class EnrollStudentToSubjectTest extends ComponentTestBase {
 
-  private static final String SUBJECT_URL = "/subject/{subjectId}";
+  private static final String ENROLL_STUDENT_URL = "/student/{username}/subject/{subjectId}";
 
   @Autowired
   private CoursesEntityMapper entityMapper;
@@ -52,7 +51,7 @@ public class UpdateSubjectTest extends ComponentTestBase {
   private UserRepository userRepository;
 
   @Autowired
-  private EntityManager entityManager;
+  private SessionFactory sessionFactory;
 
   @AfterEach
   public void teardown() {
@@ -63,90 +62,96 @@ public class UpdateSubjectTest extends ComponentTestBase {
   }
 
   @Test
-  public void ShouldUpdateSubject() {
+  public void shouldEnrollStudentToSubject() {
     var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
     var course = entityMapper.courseToDomain(courseEntity, List.of());
-    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValidWithRole(RoleEnum.PROFESSOR)));
     var professor = userEntityMapper.userToDomain(userEntity);
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
     var subjectEntity = subjectRepository.save(entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity));
     var expectedSubject = entityMapper.subjectToDomain(subjectEntity, schedules);
+
+    var studentEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValidWithRole(RoleEnum.STUDENT)));
+    var student = userEntityMapper.userToDomain(studentEntity);
 
     var request = SubjectRequestMother.buildSubjectRequest(expectedSubject);
 
-    var response = restTemplate.exchange(SUBJECT_URL, HttpMethod.PUT, new HttpEntity<>(request),
-        Void.class, expectedSubject.getId());
+    var response = restTemplate.exchange(ENROLL_STUDENT_URL, HttpMethod.PUT, new HttpEntity<>(request),
+        Void.class, student.getUsername(), expectedSubject.getId());
 
-    var savedSubject = subjectRepository.findByProfessorUsername(professor.getUsername());
-    var savedSchedules = scheduleRepository.findBySubjectId(savedSubject.stream().map(SubjectEntity::getId).collect(Collectors.toList()));
+    var savedSubject = subjectRepository.findAllByStudent(student.getId());
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(savedSubject).first().usingRecursiveComparison()
-        .ignoringFields("course", "professor", "schedules", "createdDate", "active", "updatedDate", "id", "students").isEqualTo(expectedSubject);
-    assertThat(savedSchedules.stream().map(entityMapper::scheduleToDomain).collect(Collectors.toList()))
-        .usingRecursiveComparison().ignoringFields("id").isEqualTo(schedules);
+    assertThat(savedSubject).first()
+        .extracting("id").isEqualTo(expectedSubject.getId());
   }
 
   @Test
-  public void ShouldReturnNotFoundWhenCourseDoesNotExists() {
+  public void shouldReturnSubjectNotFoundWhenEnrollStudent() {
     var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
     var course = entityMapper.courseToDomain(courseEntity, List.of());
-    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValidWithRole(RoleEnum.STUDENT)));
     var professor = userEntityMapper.userToDomain(userEntity);
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
     var subjectEntity = subjectRepository.save(entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity));
     var expectedSubject = entityMapper.subjectToDomain(subjectEntity, schedules);
 
-    var request = SubjectRequestMother.buildSubjectRequestWithRandomCourseId(expectedSubject);
+    var studentEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValidWithRole(RoleEnum.STUDENT)));
+    var student = userEntityMapper.userToDomain(studentEntity);
 
-    var response = restTemplate.exchange(SUBJECT_URL, HttpMethod.PUT, new HttpEntity<>(request),
-        ErrorResponse.class, expectedSubject.getId());
+    var request = SubjectRequestMother.buildSubjectRequest(expectedSubject);
+
+    var response = restTemplate.exchange(ENROLL_STUDENT_URL, HttpMethod.PUT, new HttpEntity<>(request),
+        ErrorResponse.class, student.getUsername(), UUID.randomUUID().toString());
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-    assertThat(response.getBody().getMessage()).isEqualTo(String.format("Course with id %s does not exists", request.getCourseId()));
+    assertThat(response.getBody().getMessage()).isEqualTo("Subject does not exists");
   }
 
   @Test
-  public void ShouldReturnNotFoundWhenProfessorDoesNotExists() {
+  public void shouldReturnStudentNotFoundWhenEnrollStudent() {
     var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
     var course = entityMapper.courseToDomain(courseEntity, List.of());
-    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValidWithRole(RoleEnum.STUDENT)));
     var professor = userEntityMapper.userToDomain(userEntity);
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
     var subjectEntity = subjectRepository.save(entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity));
     var expectedSubject = entityMapper.subjectToDomain(subjectEntity, schedules);
-
-    var request = SubjectRequestMother.buildSubjectRequestWithRandomProfessorUsername(expectedSubject);
-
-    var response = restTemplate.exchange(SUBJECT_URL, HttpMethod.PUT, new HttpEntity<>(request),
-        ErrorResponse.class, expectedSubject.getId());
-
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-    assertThat(response.getBody().getMessage()).isEqualTo(String.format("Professor with username: %s was not found", request.getProfessorUserName()));
-  }
-
-  @Test
-  public void shouldReturnStudentConflictWhenUpdateSubject() {
-    var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
-    var course = entityMapper.courseToDomain(courseEntity, List.of());
-    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));
-    var professor = userEntityMapper.userToDomain(userEntity);
-    var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
 
     var studentEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValidWithRole(RoleEnum.STUDENT)));
     userEntityMapper.userToDomain(studentEntity);
 
+    var request = SubjectRequestMother.buildSubjectRequest(expectedSubject);
+
+    var response = restTemplate.exchange(ENROLL_STUDENT_URL, HttpMethod.PUT, new HttpEntity<>(request),
+        ErrorResponse.class, "not-exists", expectedSubject.getId());
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    assertThat(response.getBody().getMessage()).isEqualTo("Student does not exists");
+  }
+
+  @Test
+  public void shouldReturnStudentConflictWhenEnrollStudent() {
+    var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
+    var course = entityMapper.courseToDomain(courseEntity, List.of());
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValidWithRole(RoleEnum.STUDENT)));
+    var professor = userEntityMapper.userToDomain(userEntity);
+    var schedule = ScheduleMother.buildSchedule(0, 10);
+
+    var studentEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValidWithRole(RoleEnum.STUDENT)));
+    var student = userEntityMapper.userToDomain(studentEntity);
+
     var subjectEntity = entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity);
     subjectEntity.getStudents().add(studentEntity);
     var actualStoredSubject = subjectRepository.save(subjectEntity);
-    var expectedSubject = entityMapper.subjectToDomain(actualStoredSubject, schedules);
+    var expectedSubject = entityMapper.subjectToDomain(actualStoredSubject, List.of(schedule));
+    scheduleRepository.save(entityMapper.scheduleToEntity(schedule, actualStoredSubject));
 
     var request = SubjectRequestMother.buildSubjectRequest(expectedSubject);
 
-    var response = restTemplate.exchange(SUBJECT_URL, HttpMethod.PUT, new HttpEntity<>(request),
-        ErrorResponse.class, expectedSubject.getId());
+    var response = restTemplate.exchange(ENROLL_STUDENT_URL, HttpMethod.PUT, new HttpEntity<>(request),
+        ErrorResponse.class, student.getUsername(), expectedSubject.getId());
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
-    assertThat(response.getBody().getMessage()).isEqualTo(String.format(STUDENT_CONFLICT_ERROR_MSG, 1));
-
+    assertThat(response.getBody().getMessage()).isEqualTo(String.format(SCHEDULE_COLLISION_MSG, student.getUsername(), expectedSubject.getName()));
   }
 }

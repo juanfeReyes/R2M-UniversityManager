@@ -16,7 +16,20 @@ public class UserMother {
         faker.name().firstName(),
         faker.name().lastName(),
         faker.internet().emailAddress(),
-        RoleEnum.DIRECTOR,
+        RoleEnum.PROFESSOR,
+        Boolean.TRUE
+    );
+  }
+
+  public static User buildValidWithRole(RoleEnum role) {
+    var faker = FakerUtil.buildFaker();
+    return new User(
+        UUID.randomUUID().toString(),
+        faker.name().firstName(),
+        faker.name().firstName(),
+        faker.name().lastName(),
+        faker.internet().emailAddress(),
+        role,
         Boolean.TRUE
     );
   }
