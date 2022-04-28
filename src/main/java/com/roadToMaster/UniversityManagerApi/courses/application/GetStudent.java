@@ -4,7 +4,9 @@ import com.roadToMaster.UniversityManagerApi.courses.application.interfaces.IGet
 import com.roadToMaster.UniversityManagerApi.courses.domain.Student;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
+import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceConflictException;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceNotFoundException;
+import com.roadToMaster.UniversityManagerApi.users.domain.RoleEnum;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +35,11 @@ public class GetStudent implements IGetStudent {
 
   public Student execute(String username) {
 
-    //Verify student must have role STUDENT
     var userEntity = userRepository.findByUsername(username);
     if (userEntity.isEmpty()) {
       throw new ResourceNotFoundException("Student does not exists");
     }
+
     var studentProfile = userEntityMapper.userToDomain(userEntity.get());
     var subjectEntities = subjectRepository.findAllByStudent(studentProfile.getId());
 

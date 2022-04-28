@@ -9,7 +9,9 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.S
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceAlreadyCreatedException;
+import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceConflictException;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceNotFoundException;
+import com.roadToMaster.UniversityManagerApi.users.domain.RoleEnum;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +67,9 @@ public class CreateSubject implements ICreateSubject {
     var user = userRepository.findByUsername(professorUsername);
     if (user.isEmpty()) {
       throw new ResourceNotFoundException(String.format("Professor with username: %s was not found", professorUsername));
+    }
+    if(!user.get().getRole().equals(RoleEnum.PROFESSOR.value)){
+      throw new ResourceConflictException("User is not a professor, cannot be assign to Subject");
     }
 
     var overlappedSchedules = computeOverlappedSchedules.execute(schedules, computeOverlappedSchedules.getProfessorSchedules(professorUsername));

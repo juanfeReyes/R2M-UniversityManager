@@ -4,7 +4,9 @@ import com.roadToMaster.UniversityManagerApi.courses.application.interfaces.IEnr
 import com.roadToMaster.UniversityManagerApi.courses.domain.exceptions.ScheduleConflictException;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
+import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceConflictException;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceNotFoundException;
+import com.roadToMaster.UniversityManagerApi.users.domain.RoleEnum;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +48,10 @@ public class EnrollStudentToSubject implements IEnrollStudentToSubject {
 
     var subject = subjectEntity.get();
     var student = studentEntity.get();
+
+    if(!student.getRole().equals(RoleEnum.STUDENT.value)){
+      throw new ResourceConflictException("User is not a student, cannot be assign to Subject");
+    }
 
     var currentStudentSchedules = computeOverlappedSchedules.getStudentSchedules(student.getId());
     var subjectSchedules = subject.getSchedules().stream().map(coursesEntityMapper::scheduleToDomain).collect(Collectors.toList());

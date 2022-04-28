@@ -65,7 +65,7 @@ public class EnrollStudentToSubjectTest extends ComponentTestBase {
   public void shouldEnrollStudentToSubject() {
     var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
     var course = entityMapper.courseToDomain(courseEntity, List.of());
-    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValidWithRole(RoleEnum.PROFESSOR)));
     var professor = userEntityMapper.userToDomain(userEntity);
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
     var subjectEntity = subjectRepository.save(entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity));
@@ -89,7 +89,7 @@ public class EnrollStudentToSubjectTest extends ComponentTestBase {
   public void shouldReturnSubjectNotFoundWhenEnrollStudent() {
     var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
     var course = entityMapper.courseToDomain(courseEntity, List.of());
-    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValidWithRole(RoleEnum.STUDENT)));
     var professor = userEntityMapper.userToDomain(userEntity);
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
     var subjectEntity = subjectRepository.save(entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity));
@@ -111,7 +111,7 @@ public class EnrollStudentToSubjectTest extends ComponentTestBase {
   public void shouldReturnStudentNotFoundWhenEnrollStudent() {
     var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
     var course = entityMapper.courseToDomain(courseEntity, List.of());
-    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValidWithRole(RoleEnum.STUDENT)));
     var professor = userEntityMapper.userToDomain(userEntity);
     var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
     var subjectEntity = subjectRepository.save(entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity));
@@ -133,7 +133,7 @@ public class EnrollStudentToSubjectTest extends ComponentTestBase {
   public void shouldReturnStudentConflictWhenEnrollStudent() {
     var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
     var course = entityMapper.courseToDomain(courseEntity, List.of());
-    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));
+    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValidWithRole(RoleEnum.STUDENT)));
     var professor = userEntityMapper.userToDomain(userEntity);
     var schedule = ScheduleMother.buildSchedule(0, 10);
 
