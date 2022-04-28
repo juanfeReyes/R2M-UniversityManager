@@ -1,6 +1,5 @@
 package com.roadToMaster.UniversityManagerApi.users.infrastructure.clients.cognito;
 
-import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceAlreadyCreatedException;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceConflictException;
 import com.roadToMaster.UniversityManagerApi.users.domain.RoleEnum;
 import com.roadToMaster.UniversityManagerApi.users.domain.User;
@@ -55,17 +54,17 @@ public class CognitoClient implements IUserProviderClient {
       if (user.getRole().value.equals(RoleEnum.ADMIN.value)) {
         addUserToAdminGroup(cognitoClient, userResponse.user().username());
       }
-    }catch(UsernameExistsException usernameExistsException){
+    } catch (UsernameExistsException usernameExistsException) {
       log.error("Cognito client Error: {}", usernameExistsException.getMessage());
       throw new ResourceConflictException(USER_ACCOUNT_ALREADY_EXISTS_ERROR);
-    }catch(InvalidParameterException invalidParameterException ){
+    } catch (InvalidParameterException invalidParameterException) {
       log.error("Cognito client Error: {}", invalidParameterException.getMessage());
       throw new ResourceConflictException(invalidParameterException.awsErrorDetails().errorMessage());
     }
     return userResponse.user().username();
   }
 
-  private void addUserToAdminGroup(CognitoIdentityProviderClient cognitoClient, String username){
+  private void addUserToAdminGroup(CognitoIdentityProviderClient cognitoClient, String username) {
     AdminAddUserToGroupRequest groupRequest = AdminAddUserToGroupRequest.builder()
         .userPoolId(userPoolId)
         .username(username)

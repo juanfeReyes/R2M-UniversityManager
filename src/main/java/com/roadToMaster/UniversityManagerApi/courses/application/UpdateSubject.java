@@ -8,10 +8,8 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.C
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.ScheduleRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
-import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.SubjectEntity;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceConflictException;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceNotFoundException;
-import com.roadToMaster.UniversityManagerApi.users.domain.User;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +65,7 @@ public class UpdateSubject implements IUpdateSubject {
 
     subjectRepository.findById(id).ifPresent(subject -> {
       var studentsCount = subject.getStudents().size();
-      if(subject.getStudents().size() > 0){
+      if (subject.getStudents().size() > 0) {
         throw new ResourceConflictException(String.format(STUDENT_CONFLICT_ERROR_MSG, studentsCount));
       }
     });

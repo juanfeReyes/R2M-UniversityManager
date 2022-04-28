@@ -6,10 +6,8 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.S
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.SubjectEntity;
-import com.roadToMaster.UniversityManagerApi.users.domain.User;
 import org.springframework.stereotype.Service;
 
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -34,7 +32,7 @@ public class ComputeSchedulesCollisions {
     this.entityMapper = entityMapper;
   }
 
-  public List<Schedule> execute(List<Schedule> newSchedules, List<Schedule> oldSchedules){
+  public List<Schedule> execute(List<Schedule> newSchedules, List<Schedule> oldSchedules) {
     Map<DayEnum, List<Schedule>> schedulesByDay = Stream
         .concat(oldSchedules.stream(), newSchedules.stream())
         .collect(groupingBy(Schedule::getDay));

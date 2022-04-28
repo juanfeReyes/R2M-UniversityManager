@@ -28,7 +28,7 @@ public class RemoveStudentFromSubjectController {
   @DeleteMapping(value = "/{username}/subject/{subjectId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.OK)
   public void removeStudentFromSubject(@NotBlank(message = "username must not be blank") @PathVariable String username,
-                                       @NotBlank(message = "subjectId must not be blank")@PathVariable String subjectId) throws Exception {
+                                       @NotBlank(message = "subjectId must not be blank") @PathVariable String subjectId) throws Exception {
     removeStudentFromSubject.execute(subjectId, username);
   }
 }

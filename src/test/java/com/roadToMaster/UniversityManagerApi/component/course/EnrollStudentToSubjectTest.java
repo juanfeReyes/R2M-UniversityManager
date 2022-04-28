@@ -10,7 +10,6 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.C
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.ScheduleRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
-import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.SubjectEntity;
 import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.ErrorResponse;
 import com.roadToMaster.UniversityManagerApi.users.domain.RoleEnum;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
@@ -23,11 +22,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static com.roadToMaster.UniversityManagerApi.courses.application.EnrollStudentToSubject.SCHEDULE_COLLISION_MSG;
 import static org.assertj.core.api.Assertions.assertThat;

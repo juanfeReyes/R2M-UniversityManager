@@ -25,7 +25,6 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 import java.util.UUID;
 
-import static com.roadToMaster.UniversityManagerApi.courses.application.EnrollStudentToSubject.SCHEDULE_COLLISION_MSG;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RemoveStudentFromSubjectTest extends ComponentTestBase {

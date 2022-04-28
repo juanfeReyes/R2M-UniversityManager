@@ -35,7 +35,7 @@ public class GetStudent implements IGetStudent {
 
     //Verify student must have role STUDENT
     var userEntity = userRepository.findByUsername(username);
-    if(userEntity.isEmpty()){
+    if (userEntity.isEmpty()) {
       throw new ResourceNotFoundException("Student does not exists");
     }
     var studentProfile = userEntityMapper.userToDomain(userEntity.get());

@@ -15,21 +15,20 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 @ControllerAdvice
 @Slf4j
 public class ControllerErrorHandler extends ResponseEntityExceptionHandler {
 
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                       HttpHeaders headers,
-                                                                       HttpStatus status, WebRequest request){
+                                                                HttpHeaders headers,
+                                                                HttpStatus status, WebRequest request) {
     var errors = new ArrayList<String>();
     for (var error : ex.getBindingResult().getFieldErrors()) {
       errors.add(error.getDefaultMessage());
     }
     var errorMessage = new ErrorResponse("Bad request the following fields have errors", errors);
-    log.error("Exception: {}: {}",errorMessage.getMessage(), String.join(",", errorMessage.getFieldsError()));
+    log.error("Exception: {}: {}", errorMessage.getMessage(), String.join(",", errorMessage.getFieldsError()));
     return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
   }
 
@@ -57,7 +56,7 @@ public class ControllerErrorHandler extends ResponseEntityExceptionHandler {
       errors.add(error.getMessage());
     }
     var errorMessage = new ErrorResponse("Bad request the following fields have errors", errors);
-    log.error("Exception: {}: {}",errorMessage.getMessage(), String.join(",", errorMessage.getFieldsError()));
+    log.error("Exception: {}: {}", errorMessage.getMessage(), String.join(",", errorMessage.getFieldsError()));
     return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
   }
 

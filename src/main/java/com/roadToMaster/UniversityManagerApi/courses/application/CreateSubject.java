@@ -8,10 +8,8 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.C
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.ScheduleRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
-import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.SubjectEntity;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceAlreadyCreatedException;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceNotFoundException;
-import com.roadToMaster.UniversityManagerApi.users.domain.User;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;

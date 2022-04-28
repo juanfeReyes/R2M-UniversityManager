@@ -2,10 +2,8 @@ package com.roadToMaster.UniversityManagerApi.component.course;
 
 import com.roadToMaster.UniversityManagerApi.component.ComponentTestBase;
 import com.roadToMaster.UniversityManagerApi.courses.domain.CourseMother;
-import com.roadToMaster.UniversityManagerApi.courses.domain.ScheduleMother;
 import com.roadToMaster.UniversityManagerApi.courses.domain.SubjectMother;
 import com.roadToMaster.UniversityManagerApi.courses.domain.UserMother;
-import com.roadToMaster.UniversityManagerApi.courses.infrastructure.SubjectRequestMother;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.api.dto.StudentResponse;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.CourseRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.ScheduleRepository;
@@ -15,11 +13,9 @@ import com.roadToMaster.UniversityManagerApi.shared.infrastructure.api.ErrorResp
 import com.roadToMaster.UniversityManagerApi.users.domain.RoleEnum;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.entity.UserEntityMapper;
-import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 

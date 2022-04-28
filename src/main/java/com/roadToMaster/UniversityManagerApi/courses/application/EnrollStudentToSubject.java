@@ -33,14 +33,14 @@ public class EnrollStudentToSubject implements IEnrollStudentToSubject {
   }
 
   public boolean execute(String subjectId, String username) {
-    var subjectEntity =  subjectRepository.findById(subjectId);
-    if(subjectEntity.isEmpty()){
+    var subjectEntity = subjectRepository.findById(subjectId);
+    if (subjectEntity.isEmpty()) {
       throw new ResourceNotFoundException("Subject does not exists");
     }
 
     // Verify that is student by role!!
     var studentEntity = userRepository.findByUsername(username);
-    if(studentEntity.isEmpty()){
+    if (studentEntity.isEmpty()) {
       throw new ResourceNotFoundException("Student does not exists");
     }
 
