@@ -5,6 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.andreinc.jbvext.annotations.date.IsDate;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -21,6 +25,8 @@ public class ScheduleRequest {
       "thursday",
       "friday",
       "saturday"})
+  @NotNull
+  @NotEmpty(message = "Day must not be empty")
   private String day;
 
   @Schema(example = "00:00")
@@ -30,5 +36,6 @@ public class ScheduleRequest {
   private String endHours;
 
   @Schema(example = "")
+  @NotNull
   private String description;
 }

@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.stream.Collectors;
 
 @RestController
@@ -29,9 +30,9 @@ public class GetStudentController {
   }
 
   @Operation(summary = "Get subjects", security = {@SecurityRequirement(name = "OAuthScheme")})
-  @GetMapping(value = "/{studentUsername}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public StudentResponse getSubjects(@PathVariable String studentUsername) {
-    var result = getStudent.execute(studentUsername);
+  @GetMapping(value = "/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public StudentResponse getSubjects(@NotBlank(message = "username must not be blank") @PathVariable String username) {
+    var result = getStudent.execute(username);
     var subjectsResponse = result.getSubjects().stream().map(coursesMapper::subjectToResponse).collect(Collectors.toList());
     return coursesMapper.studentToResponse(result, subjectsResponse);
   }
