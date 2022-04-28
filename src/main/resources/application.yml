@@ -40,3 +40,4 @@ keycloak:
 cognito:
   poolId: ${pool_id}
   baseUserPassword: Temporal1*
+  
