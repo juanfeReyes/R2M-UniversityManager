@@ -40,7 +40,6 @@ public class EnrollStudentToSubject implements IEnrollStudentToSubject {
       throw new ResourceNotFoundException("Subject does not exists");
     }
 
-    // Verify that is student by role!!
     var studentEntity = userRepository.findByUsername(username);
     if (studentEntity.isEmpty()) {
       throw new ResourceNotFoundException("Student does not exists");
