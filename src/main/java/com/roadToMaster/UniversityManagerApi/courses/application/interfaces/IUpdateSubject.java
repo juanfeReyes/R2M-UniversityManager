@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface IUpdateSubject {
 
-  Subject execute(String id, String name, String description, String courseId,
+  Subject execute(String id, String name, String description,
                   String professorUsername, List<Schedule> schedules);
 }

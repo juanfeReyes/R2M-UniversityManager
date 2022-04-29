@@ -5,6 +5,7 @@ import com.roadToMaster.UniversityManagerApi.courses.domain.CourseMother;
 import com.roadToMaster.UniversityManagerApi.courses.domain.ScheduleMother;
 import com.roadToMaster.UniversityManagerApi.courses.domain.SubjectMother;
 import com.roadToMaster.UniversityManagerApi.courses.domain.UserMother;
+import com.roadToMaster.UniversityManagerApi.courses.infrastructure.SubjectCreationMother;
 import com.roadToMaster.UniversityManagerApi.courses.infrastructure.SubjectRequestMother;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.CourseRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.ScheduleRepository;
@@ -71,7 +72,7 @@ public class CreateSubjectTest extends ComponentTestBase {
     userRepository.save(userEntityMapper.userToEntity(professor));
     courseRepository.save(entityMapper.courseToEntity(course));
 
-    var request = SubjectRequestMother.buildSubjectRequest(expectedSubject);
+    var request = SubjectCreationMother.buildSubjectRequest(expectedSubject);
 
     var response = restTemplate.exchange(SUBJECT_URL, HttpMethod.POST, new HttpEntity<>(request),
         Void.class, course.getName());

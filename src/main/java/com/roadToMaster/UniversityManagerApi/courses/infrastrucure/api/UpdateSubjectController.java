@@ -42,7 +42,7 @@ public class UpdateSubjectController {
     var schedules = subjectRequest.getSchedules().stream().map(coursesMapper::scheduleRequestToSchedule)
         .collect(Collectors.toList());
     var updatedSubject = updateSubject.execute(subjectId, subjectRequest.getName(), subjectRequest.getDescription(),
-        subjectRequest.getCourseId(), subjectRequest.getProfessorUserName(), schedules);
+        subjectRequest.getProfessorUserName(), schedules);
     return coursesMapper.subjectToResponse(updatedSubject);
   }
 }
