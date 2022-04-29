@@ -14,16 +14,15 @@ public class SubjectRequestMother {
         subject.getName(),
         subject.getDescription(),
         subject.getProfessor().getUsername(),
-        subject.getCourse().getId(),
         subject.getSchedules().stream().map(ScheduleRequestMother::buildFrom).collect(Collectors.toList()));
   }
 
-  public static SubjectRequest buildSubjectRequestWithRandomCourseId(Subject subject) {
+  public static SubjectRequest buildSubjectRequestWithRandomName(Subject subject) {
+    var faker = FakerUtil.buildFaker();
     return new SubjectRequest(
-        subject.getName(),
+        faker.name().name(),
         subject.getDescription(),
         subject.getProfessor().getUsername(),
-        UUID.randomUUID().toString(),
         subject.getSchedules().stream().map(ScheduleRequestMother::buildFrom).collect(Collectors.toList()));
   }
 
@@ -33,7 +32,6 @@ public class SubjectRequestMother {
         subject.getName(),
         subject.getDescription(),
         faker.internet().userAgentAny(),
-        subject.getCourse().getId(),
         subject.getSchedules().stream().map(ScheduleRequestMother::buildFrom).collect(Collectors.toList()));
   }
 }

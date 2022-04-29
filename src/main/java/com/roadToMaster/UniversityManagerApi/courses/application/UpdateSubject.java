@@ -8,6 +8,7 @@ import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.C
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.ScheduleRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.SubjectRepository;
 import com.roadToMaster.UniversityManagerApi.courses.infrastrucure.persistence.entity.CoursesEntityMapper;
+import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceAlreadyCreatedException;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceConflictException;
 import com.roadToMaster.UniversityManagerApi.shared.domain.exceptions.ResourceNotFoundException;
 import com.roadToMaster.UniversityManagerApi.users.infrastructure.persistence.UserRepository;
@@ -50,25 +51,24 @@ public class UpdateSubject implements IUpdateSubject {
   }
 
   @Transactional
-  public Subject execute(String id, String name, String description, String courseId,
+  public Subject execute(String id, String name, String description,
                          String professorUsername, List<Schedule> schedules) {
-    var courseEntity = courseRepository.findById(courseId);
-    if (courseEntity.isEmpty()) {
-      throw new ResourceNotFoundException(String.format("Course with id %s does not exists", courseId));
-    }
-    var course = entityMapper.courseToDomain(courseEntity.get(), Collections.emptyList());
 
     var user = userRepository.findByUsername(professorUsername);
     if (user.isEmpty()) {
       throw new ResourceNotFoundException(String.format("Professor with username: %s was not found", professorUsername));
     }
 
-    subjectRepository.findById(id).ifPresent(subject -> {
-      var studentsCount = subject.getStudents().size();
-      if (subject.getStudents().size() > 0) {
-        throw new ResourceConflictException(String.format(STUDENT_CONFLICT_ERROR_MSG, studentsCount));
-      }
-    });
+    var subjectEntity = subjectRepository.findById(id).get();
+    var studentsCount = subjectEntity.getStudents().size();
+    if (studentsCount > 0) {
+      throw new ResourceConflictException(String.format(STUDENT_CONFLICT_ERROR_MSG, studentsCount));
+    }
+
+    var course = entityMapper.courseToDomain(subjectEntity.getCourse(), Collections.emptyList());
+    if (!subjectRepository.findByNameAndCourse(name, course.getId()).get().getId().equals(subjectEntity.getId())) {
+      throw new ResourceAlreadyCreatedException(String.format("Subject within the course: %s and with name: %s already exists", course.getId(), name));
+    }
 
     scheduleRepository.deleteBySubjectId(id);
     var overlappedSchedules = computeOverlappedSchedules.execute(schedules, computeOverlappedSchedules.getProfessorSchedules(professorUsername));
@@ -78,7 +78,7 @@ public class UpdateSubject implements IUpdateSubject {
 
     var professor = userEntityMapper.userToDomain(user.get());
     var subject = new Subject(id, name, description, schedules, Collections.emptyList(), professor, course);
-    var savedSubject = subjectRepository.save(entityMapper.subjectToEntity(subject, courseEntity.get()));
+    var savedSubject = subjectRepository.save(entityMapper.subjectToEntity(subject, subjectEntity.getCourse()));
     scheduleRepository.saveAll(schedules.stream().map(s -> entityMapper.scheduleToEntity(s, savedSubject)).collect(Collectors.toList()));
 
     return subject;

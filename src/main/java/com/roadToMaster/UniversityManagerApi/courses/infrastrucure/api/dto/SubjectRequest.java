@@ -25,10 +25,6 @@ public class SubjectRequest {
   @NotNull
   private String professorUserName;
 
-  @NotEmpty
-  @NotNull
-  private String courseId;
-
   @Size(min = 1, message = "Should have at least one schedule")
   @Valid
   private List<ScheduleRequest> schedules;

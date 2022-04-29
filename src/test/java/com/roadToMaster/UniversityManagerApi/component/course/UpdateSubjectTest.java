@@ -87,25 +87,6 @@ public class UpdateSubjectTest extends ComponentTestBase {
   }
 
   @Test
-  public void ShouldReturnNotFoundWhenCourseDoesNotExists() {
-    var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
-    var course = entityMapper.courseToDomain(courseEntity, List.of());
-    var userEntity = userRepository.save(userEntityMapper.userToEntity(UserMother.buildValid()));
-    var professor = userEntityMapper.userToDomain(userEntity);
-    var schedules = List.of(ScheduleMother.buildSchedule(0, 10));
-    var subjectEntity = subjectRepository.save(entityMapper.subjectToEntity(SubjectMother.validSubject(professor, List.of(), course), courseEntity));
-    var expectedSubject = entityMapper.subjectToDomain(subjectEntity, schedules);
-
-    var request = SubjectRequestMother.buildSubjectRequestWithRandomCourseId(expectedSubject);
-
-    var response = restTemplate.exchange(SUBJECT_URL, HttpMethod.PUT, new HttpEntity<>(request),
-        ErrorResponse.class, expectedSubject.getId());
-
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-    assertThat(response.getBody().getMessage()).isEqualTo(String.format("Course with id %s does not exists", request.getCourseId()));
-  }
-
-  @Test
   public void ShouldReturnNotFoundWhenProfessorDoesNotExists() {
     var courseEntity = courseRepository.save(entityMapper.courseToEntity(CourseMother.validCourse()));
     var course = entityMapper.courseToDomain(courseEntity, List.of());
